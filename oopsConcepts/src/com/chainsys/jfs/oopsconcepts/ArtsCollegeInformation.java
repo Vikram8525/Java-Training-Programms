@@ -7,6 +7,11 @@ public class ArtsCollegeInformation extends EngineeringCollegeInformation {
 	        System.out.println("This college offers various courses in Arts, Humanities, and Social Sciences.");
 	    }
 
+		public void college() {
+			// TODO Auto-generated method stub
+			System.out.println("college ");
+		}
+
 	}
 
 

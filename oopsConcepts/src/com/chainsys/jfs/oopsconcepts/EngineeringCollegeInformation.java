@@ -1,6 +1,6 @@
 package com.chainsys.jfs.oopsconcepts;
 
-public class EngineeringCollegeInformation {
+public abstract class EngineeringCollegeInformation {
 
 	public void collegeName(String name) {
 		System.out.println(name +" is a Engineering College");
@@ -13,4 +13,5 @@ public class EngineeringCollegeInformation {
 	public void collegeYears(int noOfYears) {
 		System.out.println("the cource you have choosen is a "+ noOfYears +" years cource");
 	}
+	public abstract void college();
 }
