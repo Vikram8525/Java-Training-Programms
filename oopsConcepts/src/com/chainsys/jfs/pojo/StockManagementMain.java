@@ -15,8 +15,12 @@ public class StockManagementMain {
 		LocalDate endDate = si.validateDateString("Enter the end date (YYYY-MM-DD): ");
 
 		Period period = si.calculatePeriodBetween(startDate, endDate);
-        System.out.println("Difference: " + period.getYears() + " years, " +
+        System.out.println("this item is " + period.getYears() + " years, " +
                            period.getMonths() + " months, and " +
-                           period.getDays() + " days.");
+                           period.getDays() + " days old");
+        if (period.getYears()<1 && period.getYears() <2) {
+        	System.out.println("Your item is Manufactured before 1 years :");
+        	System.out.println("This item may be expiring soon");
+        }
 	}
 }
