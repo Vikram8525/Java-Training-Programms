@@ -17,16 +17,6 @@ public class StockManagementInformation {
 		System.out.print("enter the Number of items available in the store :");
 		sp.setItemQuantity(iv.validateInteger());
 		
-		int item = sp.getItemQuantity();
-		
-		if (item <50)
-		{
-			System.out.println(" The stock will be depleted. ");
-		}
-		else {
-			System.out.println(" There is enough amount of stock. ");
-		}
-		
 		
 	}
 
@@ -53,6 +43,19 @@ public class StockManagementInformation {
 
 	    public static Period calculatePeriodBetween(LocalDate startDate, LocalDate endDate) {
 	        return Period.between(startDate, endDate);
+	    }
+	    public void Display() {
+	    	StockManagementPojo sp = new StockManagementPojo();
+	    	int item = sp.getItemQuantity();
+			
+			if (item <50)
+			{
+				System.out.println("The stock will be depleted. ");
+				System.out.println("The stock must be Added ");
+			}
+			else {
+				System.out.println("There is enough amount of stock. ");
+			}
 	    }
 	}
 
