@@ -10,8 +10,7 @@ public class StockManagementMain {
         si.StockManagement();
 
         LocalDate startDate = si.validateDateString("Enter the last date that the stock has been added : (YYYY-MM-DD): ");
-        LocalDate endDate = LocalDate.now(); // Automatically generate end date as current date
-
+        LocalDate endDate = LocalDate.now(); 
         Period period = si.calculatePeriodBetween(startDate, endDate);
         System.out.println("This item is " + period.getYears() + " years, " +
                            period.getMonths() + " months, and " +

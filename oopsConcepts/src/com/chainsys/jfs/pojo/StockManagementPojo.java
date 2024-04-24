@@ -5,16 +5,15 @@ public class StockManagementPojo {
  String itemName;
  int itemId;
  int itemQuantity;
- String Date;
-public StockManagementPojo(String itemName, int itemId, int itemQuantity, String date) {
+ LocalDate Date;
+public StockManagementPojo() {
+}
+public StockManagementPojo(String itemName, int itemId, int itemQuantity, LocalDate date) {
 	super();
 	this.itemName = itemName;
 	this.itemId = itemId;
 	this.itemQuantity = itemQuantity;
 	Date = date;
-}
-public StockManagementPojo() {
-	
 }
 public String getItemName() {
 	return itemName;
@@ -34,10 +33,10 @@ public int getItemQuantity() {
 public void setItemQuantity(int itemQuantity) {
 	this.itemQuantity = itemQuantity;
 }
-public String getDate() {
+public LocalDate getDate() {
 	return Date;
 }
-public void setDate(String date) {
+public void setDate(LocalDate date) {
 	Date = date;
 }
 @Override

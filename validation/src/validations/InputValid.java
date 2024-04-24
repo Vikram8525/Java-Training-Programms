@@ -3,7 +3,7 @@ package validations;
 import java.util.Scanner;
 
 public class InputValid {
-
+	
 	public static int validateInteger() {
 		Scanner scanner = new Scanner(System.in);
 
