@@ -2,7 +2,6 @@ package com.chainsys.jfs.newstock;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +46,19 @@ public class StockManagementMain {
                 }
             }
             System.out.println("Signed Up Successfully!");
+            System.out.println("Please enter your credentials again for verification:");
+            while (true) {
+                System.out.println("Enter UserName:");
+                String inputName = scanner.nextLine();
+                System.out.println("Enter Password:");
+                String inputPass = scanner.nextLine();
+                if (inputName.equals(userName) && inputPass.equals(passWord)) {
+                    System.out.println("Verification successful!");
+                    break;
+                } else {
+                    System.out.println("Invalid username or password. Try again.");
+                }
+            }
         } else if (choose.equals("yes")) {
             String defaultUserName = "root";
             String defaultPassword = "Root@123";
@@ -76,6 +88,8 @@ public class StockManagementMain {
                 System.out.println("Invalid username or password.");
                 return;
             }
+
+            
         }
 
         boolean exit = false;
@@ -149,7 +163,7 @@ public class StockManagementMain {
                     System.out.println("This item is quite old you need to re stock this item.");
                 } else if (period.getMonths() < 5 && period.getMonths() >= 2) {
                     System.out.println("This item is relatively new.'NEW ARRIVAL'");
-                } else if (period.getDays() < 25) {
+                } else if (period.getDays() < 31) {
                     System.out.println("This item is new.'FRESH ITEM' ");
                 } else {
                     System.out.println("This item is very old.'CLEAR THIS ITEM' ");
