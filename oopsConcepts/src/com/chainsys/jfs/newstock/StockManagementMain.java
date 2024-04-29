@@ -131,7 +131,7 @@ public class StockManagementMain {
         }
     }
 
-    private static void checkStockAgeInDays(List<StockManagementInformation> items) {
+    public static void checkStockAgeInDays(List<StockManagementInformation> items) {
         if (items.isEmpty()) {
             System.out.println("No items available!");
         } else {
@@ -166,15 +166,15 @@ public class StockManagementMain {
         } else {
             boolean isAnyItemAvailable = false;
             for (StockManagementInformation item : items) {
-                if (item.getItemQuantity() > 0) {
+                if (item.getItemQuantity() > 50 ) {
                     isAnyItemAvailable = true;
                     break;
                 }
             }
             if (isAnyItemAvailable) {
-                System.out.println("Items are available in stock.");
+                System.out.println("this Item is available in stock.");
             } else {
-                System.out.println("No items are available in stock.");
+                System.out.println("The stock will be depleted soon. \n you need to add the stock to the store soon...");
             }
         }
     }
