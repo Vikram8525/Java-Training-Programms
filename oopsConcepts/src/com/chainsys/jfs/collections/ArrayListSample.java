@@ -62,39 +62,72 @@ public class ArrayListSample {
 		
 		
 		
-		
-		
-		ArrayList<ArrayListPojo> arrList = new ArrayList<>(); 
-        Scanner sc = new Scanner(System.in);
+//		
+//		
+//		ArrayList<ArrayListPojo> arrList = new ArrayList<>(); 
+//        Scanner sc = new Scanner(System.in);
+//
+//        while (true) {
+//            System.out.println("Enter the name (type 'done' to stop): ");
+//            String name = sc.next();
+//            if (name.equals("done")) {
+//                break;
+//            }
+//
+//            System.out.println("Enter the age: ");
+//            int age = sc.nextInt();
+//
+//            ArrayListPojo arr = new ArrayListPojo();
+//            arr.setName(name);
+//            arr.setAge(age);
+//
+//            arrList.add(arr);
+//        }
+//
+//        System.out.println("Names in the ArrayList:");
+//        for (ArrayListPojo element : arrList) {
+//            System.out.println(element.getName());
+//        }
+//
+//        System.out.println("\nAges in the ArrayList:");
+//        for (ArrayListPojo element : arrList) {
+//            System.out.println(element.getAge());
+//        }
+//
+//        sc.close();
+//	}
+//	
 
-        while (true) {
-            System.out.println("Enter the name (type 'done' to stop): ");
-            String name = sc.next();
-            if (name.equals("done")) {
-                break;
-            }
+	        ArrayList<Integer> arrayList = new ArrayList<>();
+	        Scanner scanner = new Scanner(System.in);
 
-            System.out.println("Enter the age: ");
-            int age = sc.nextInt();
+	        arrayList.add(1);
+	        arrayList.add(2);
+	        arrayList.add(3);
 
-            ArrayListPojo arr = new ArrayListPojo();
-            arr.setName(name);
-            arr.setAge(age);
+	        System.out.println("ArrayList: " + arrayList);
 
-            arrList.add(arr);
-        }
+	        System.out.print("Enter the element to check: ");
+	        int elementToCheck = scanner.nextInt();
+	        if (arrayList.contains(elementToCheck)) {
+	            System.out.println("Element " + elementToCheck + " exists in the ArrayList.");
+	        } else {
+	            System.out.println("Element " + elementToCheck + " does not exist in the ArrayList.");
+	        }
 
-        System.out.println("Names in the ArrayList:");
-        for (ArrayListPojo element : arrList) {
-            System.out.println(element.getName());
-        }
+	        System.out.print("Enter the element to delete: ");
+	        int elementToDelete = scanner.nextInt();
+	        if (arrayList.contains(elementToDelete)) {
+	        	arrayList.remove(Integer.valueOf(elementToDelete));
+	        } else {
+	            System.out.println("Element " + elementToDelete + " does not exist in the ArrayList.");
+	        }
+	        
 
-        System.out.println("\nAges in the ArrayList:");
-        for (ArrayListPojo element : arrList) {
-            System.out.println(element.getAge());
-        }
+	        System.out.println("ArrayList after deletion: " + arrayList);
 
-        sc.close();
+	        scanner.close();
+	    }
 	}
 
-}
+
