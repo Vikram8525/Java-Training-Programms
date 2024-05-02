@@ -1,4 +1,4 @@
-package com.chainsys.jfs.newstock;
+package com.chainsys.jfs.stockconnection;
 
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -14,18 +14,28 @@ public class StockManagementInformation {
     private int itemQuantity;
     private LocalDate startDate;
 
-    public StockManagementInformation(String itemName, Connection connection) {
-        this.itemName = itemName;
-        ValidationClass iv = new ValidationClass();
-        Scanner scanner = new Scanner(System.in);
+   
 
-        System.out.print("Enter the ID of the item: ");
-        this.itemId = iv.validateInteger();
-        System.out.print("Enter the number of items available in the store: ");
-        this.itemQuantity = iv.validateInteger();
+        public StockManagementInformation(String itemName, int itemId, int itemQuantity, LocalDate startDate) {
+            this.itemName = itemName;
+            this.itemId = itemId;
+            this.itemQuantity = itemQuantity;
+            this.startDate = startDate;
+        }
 
-        this.startDate = validateDateString("Enter the last date that the stock has been added (YYYY-MM-DD): ");
-    }
+        public StockManagementInformation(String itemName) {
+            this.itemName = itemName;
+            ValidationClass iv = new ValidationClass();
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.print("Enter the ID of the item: ");
+            this.itemId = iv.validateInteger();
+            System.out.print("Enter the number of items available in the store: ");
+            this.itemQuantity = iv.validateInteger();
+
+            this.startDate = validateDateString("Enter the last date that the stock has been added (YYYY-MM-DD): ");
+        }
+
 
 
     public String getItemName() {

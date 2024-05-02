@@ -7,10 +7,10 @@ import java.sql.Statement;
 
 public class CRUDOperations {
 
-    public static void insertData() throws ClassNotFoundException, SQLException {
+    public static void insertData(ConnectivityPojo data) throws ClassNotFoundException, SQLException {
         try (Connection con = SampleConnectivity.connectionUtil();
              Statement st = con.createStatement()) {
-            String query = "insert into student1 values(11,'anbu',100,75)";
+            String query = "insert into student1 values(" + data.getId() + ",'" + data.getName() + "'," + data.getClassHeld() + "," + data.getClassAttended() + ")";
             st.executeUpdate(query);
         }
     }

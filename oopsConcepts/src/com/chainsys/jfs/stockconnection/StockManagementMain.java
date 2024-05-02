@@ -1,11 +1,15 @@
-package com.chainsys.jfs.newstock;
+package com.chainsys.jfs.stockconnection;
 
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import com.chainsys.jfs.databaseconnection.SampleConnectivity;
 
 public class StockManagementMain {
 
@@ -88,8 +92,6 @@ public class StockManagementMain {
                 System.out.println("Invalid username or password.");
                 return;
             }
-
-            
         }
 
         boolean exit = false;
@@ -108,9 +110,11 @@ public class StockManagementMain {
                 case 1:
                     System.out.print("Enter item name: ");
                     String itemName = scanner.nextLine();
-                    StockManagementInformation item = new StockManagementInformation(itemName, null); // Pass itemName as parameter
+                    StockManagementInformation item = new StockManagementInformation(itemName); // Pass itemName as parameter
                     items.add(item);
                     System.out.println("Item added successfully!");
+                    // Insert into database
+                    insertItemToDB(item);
                     break;
                 case 2:
                     displayItemDetails(items);
@@ -180,7 +184,7 @@ public class StockManagementMain {
         } else {
             boolean isAnyItemAvailable = false;
             for (StockManagementInformation item : items) {
-                if (item.getItemQuantity() > 50 ) {
+                if (item.getItemQuantity() > 50) {
                     isAnyItemAvailable = true;
                     break;
                 }
@@ -190,6 +194,20 @@ public class StockManagementMain {
             } else {
                 System.out.println("The stock will be depleted soon. \n you need to add the stock to the store soon...");
             }
+        }
+    }
+
+    private static void insertItemToDB(StockManagementInformation item) {
+        try (Connection connection = SampleConnectivity.connectionUtil()) {
+            String query = "INSERT INTO stock_details (item_name, item_id, item_quantity, start_date) VALUES (?, ?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, item.getItemName());
+            preparedStatement.setInt(2, item.getItemId());
+            preparedStatement.setInt(3, item.getItemQuantity());
+            preparedStatement.setDate(4, Date.valueOf(item.getStartDate()));
+            preparedStatement.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
