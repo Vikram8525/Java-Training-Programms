@@ -1,4 +1,4 @@
-package com.chainsys.jfs.Stock;
+package com.chainsys.jfs.stockconnection;
 
 import java.time.LocalDate;
 

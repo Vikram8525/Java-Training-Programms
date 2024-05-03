@@ -1,19 +1,16 @@
 package com.chainsys.jfs.stockconnection;
 
-import java.sql.*;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.chainsys.jfs.databaseconnection.SampleConnectivity;
+public class StockManagementMain implements StockManagementInterface {
 
-public class StockManagementMain {
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+        StockManagementMain stockManagementMain = new StockManagementMain(); // Create an instance
         Scanner scanner = new Scanner(System.in);
         List<StockManagementInformation> items = new ArrayList<>();
         ValidationClass v1 = new ValidationClass();
@@ -110,20 +107,30 @@ public class StockManagementMain {
                 case 1:
                     System.out.print("Enter item name: ");
                     String itemName = scanner.nextLine();
-                    StockManagementInformation item = new StockManagementInformation(itemName); // Pass itemName as parameter
+                    StockManagementInformation item = new StockManagementInformation(itemName);
                     items.add(item);
-                    System.out.println("Item added successfully!");
-                    // Insert into database
-                    insertItemToDB(item);
+                    try {
+                        // Convert LocalDate to java.util.Date
+                        LocalDate startDate = item.getStartDate();
+                        java.util.Date utilStartDate = java.sql.Date.valueOf(startDate);
+
+                        // Call addStock with the converted date
+                        Connectivity.addStock( 0, itemName, item.getItemQuantity(), utilStartDate);
+                        System.out.println("Item added successfully!");
+                    } catch (SQLException e) {
+                        System.out.println("Failed to add item to database: " + e.getMessage());
+                    }
                     break;
                 case 2:
-                    displayItemDetails(items);
+                	Connectivity.displayStocks();
+                    //stockManagementMain.displayItemDetails(items); // Call non-static method using the instance
                     break;
                 case 3:
-                    checkStockAgeInDays(items);
+                	Connectivity.checkStockAgeAndAvailability(items);
+                    //stockManagementMain.checkStockAgeInDays(items); // Call non-static method using the instance
                     break;
                 case 4:
-                    checkStockAvailability(items);
+                    stockManagementMain.checkStockAvailability(items); // Call non-static method using the instance
                     break;
                 case 5:
                     exit = true;
@@ -136,7 +143,8 @@ public class StockManagementMain {
         scanner.close();
     }
 
-    private static void displayItemDetails(List<StockManagementInformation> items) {
+    @Override
+    public void displayItemDetails(List<StockManagementInformation> items) {
         if (items.isEmpty()) {
             System.out.println("No items available!");
         } else {
@@ -149,20 +157,21 @@ public class StockManagementMain {
         }
     }
 
-    public static void checkStockAgeInDays(List<StockManagementInformation> items) {
+    @Override
+    public void checkStockAgeInDays(List<StockManagementInformation> items) {
         if (items.isEmpty()) {
             System.out.println("No items available!");
         } else {
-            LocalDate currentDate = LocalDate.now();
             for (StockManagementInformation item : items) {
                 LocalDate startDate = item.getStartDate();
-                long daysInStock = ChronoUnit.DAYS.between(startDate, currentDate);
+                LocalDate currentDate = LocalDate.now();
+                long daysInStock = java.time.temporal.ChronoUnit.DAYS.between(startDate, currentDate);
                 System.out.println("Item: " + item.getItemName() + " has been in stock for " + daysInStock + " days.");
 
                 Period period = item.calculatePeriodBetween(startDate, currentDate);
                 if (period.getYears() > 1 && period.getYears() == 2) {
                     System.out.println("This item was manufactured more than 1 year ago. Clear this stock by giving offers.");
-                    System.out.println("This item may be expiring soon. Restock this stem with new item");
+                    System.out.println("This item may be expiring soon. Restock this item with new item");
                 } else if (period.getMonths() >= 5 && period.getMonths() < 11) {
                     System.out.println("This item is quite old you need to re stock this item.");
                 } else if (period.getMonths() < 5 && period.getMonths() >= 2) {
@@ -178,36 +187,23 @@ public class StockManagementMain {
         }
     }
 
-    private static void checkStockAvailability(List<StockManagementInformation> items) {
+    @Override
+    public void checkStockAvailability(List<StockManagementInformation> items) {
         if (items.isEmpty()) {
             System.out.println("No items available!");
         } else {
             boolean isAnyItemAvailable = false;
             for (StockManagementInformation item : items) {
-                if (item.getItemQuantity() > 50) {
+                if (item.getItemQuantity() > 50 ) {
                     isAnyItemAvailable = true;
                     break;
                 }
             }
             if (isAnyItemAvailable) {
-                System.out.println("this Item is available in stock.");
+                System.out.println("This Item is available in stock.");
             } else {
                 System.out.println("The stock will be depleted soon. \n you need to add the stock to the store soon...");
             }
-        }
-    }
-
-    private static void insertItemToDB(StockManagementInformation item) {
-        try (Connection connection = SampleConnectivity.connectionUtil()) {
-            String query = "INSERT INTO stock_details (item_name, item_id, item_quantity, start_date) VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, item.getItemName());
-            preparedStatement.setInt(2, item.getItemId());
-            preparedStatement.setInt(3, item.getItemQuantity());
-            preparedStatement.setDate(4, Date.valueOf(item.getStartDate()));
-            preparedStatement.executeUpdate();
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 }

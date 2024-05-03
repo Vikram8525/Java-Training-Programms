@@ -1,5 +1,8 @@
 package com.chainsys.jfs.newstock;
 
+import java.sql.Date;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -9,7 +12,7 @@ import java.util.Scanner;
 
 public class StockManagementMain {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, ParseException {
         Scanner scanner = new Scanner(System.in);
         List<StockManagementInformation> items = new ArrayList<>();
         ValidationClass v1 = new ValidationClass();
@@ -151,7 +154,7 @@ public class StockManagementMain {
         } else {
             LocalDate currentDate = LocalDate.now();
             for (StockManagementInformation item : items) {
-                LocalDate startDate = item.getStartDate();
+                Date startDate = item.getStartDate();
                 long daysInStock = ChronoUnit.DAYS.between(startDate, currentDate);
                 System.out.println("Item: " + item.getItemName() + " has been in stock for " + daysInStock + " days.");
 

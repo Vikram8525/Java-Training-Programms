@@ -1,9 +1,9 @@
 package com.chainsys.jfs.stockconnection;
 
-import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Scanner;
 
 import com.chainsys.jfs.pojo.ValidationClass;
@@ -14,29 +14,18 @@ public class StockManagementInformation {
     private int itemQuantity;
     private LocalDate startDate;
 
-   
+    public StockManagementInformation(String itemName) {
+        this.itemName = itemName;
+        ValidationClass iv = new ValidationClass();
+        Scanner scanner = new Scanner(System.in);
 
-        public StockManagementInformation(String itemName, int itemId, int itemQuantity, LocalDate startDate) {
-            this.itemName = itemName;
-            this.itemId = itemId;
-            this.itemQuantity = itemQuantity;
-            this.startDate = startDate;
-        }
+        System.out.print("Enter the ID of the item: ");
+        this.itemId = iv.validateInteger();
+        System.out.print("Enter the number of items available in the store: ");
+        this.itemQuantity = iv.validateInteger();
 
-        public StockManagementInformation(String itemName) {
-            this.itemName = itemName;
-            ValidationClass iv = new ValidationClass();
-            Scanner scanner = new Scanner(System.in);
-
-            System.out.print("Enter the ID of the item: ");
-            this.itemId = iv.validateInteger();
-            System.out.print("Enter the number of items available in the store: ");
-            this.itemQuantity = iv.validateInteger();
-
-            this.startDate = validateDateString("Enter the last date that the stock has been added (YYYY-MM-DD): ");
-        }
-
-
+        this.startDate = validateDateString("Enter the last date that the stock has been added (YYYY-MM-DD): ");
+    }
 
     public String getItemName() {
         return itemName;
@@ -80,9 +69,11 @@ public class StockManagementInformation {
             System.out.println("There is enough amount of stock.");
         }
     }
+
     public Period calculatePeriodBetween(LocalDate startDate, LocalDate endDate) {
         return Period.between(startDate, endDate);
     }
+
     public static LocalDate validateDateString(String message) {
         boolean isValidInput = false;
         Scanner scanner = new Scanner(System.in);

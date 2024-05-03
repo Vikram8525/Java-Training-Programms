@@ -1,24 +1,17 @@
-package com.chainsys.jfs.newstock;
+package com.chainsys.jfs.stockconnection;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-import com.chainsys.jfs.pojo.ValidationClass;
-
 public class StockManagementInformation {
     private String itemName;
     private int itemId;
     private int itemQuantity;
-    private java.util.Date startDate;
+    private LocalDate startDate;
 
-    public StockManagementInformation(String itemName, Connection connection) throws SQLException, ParseException {
+    public StockManagementInformation(String itemName) {
         this.itemName = itemName;
         ValidationClass iv = new ValidationClass();
         Scanner scanner = new Scanner(System.in);
@@ -29,9 +22,7 @@ public class StockManagementInformation {
         this.itemQuantity = iv.validateInteger();
 
         this.startDate = validateDateString("Enter the last date that the stock has been added (YYYY-MM-DD): ");
-        Connectivity.addStock(itemName, itemQuantity,startDate );
     }
-
 
     public String getItemName() {
         return itemName;
@@ -41,7 +32,7 @@ public class StockManagementInformation {
         this.itemName = itemName;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
@@ -75,18 +66,29 @@ public class StockManagementInformation {
             System.out.println("There is enough amount of stock.");
         }
     }
-    public Period calculatePeriodBetween(Date startDate2, LocalDate endDate) {
-        return Period.between(startDate2, endDate);
+
+    public Period calculatePeriodBetween(LocalDate startDate, LocalDate endDate) {
+        return Period.between(startDate, endDate);
     }
-    public static java.util.Date validateDateString(String message) throws ParseException {
-    	Scanner sc=new Scanner(System.in);
-    	String date="19/05/2001";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				/*
-				 * date = LocalDate.parse(input, dateFormatter);
-				 * System.out.println("You entered: " + date); isValidInput = true;
-				 */
-          java.util.Date date1 = dateFormat.parse(dateFormat.format(date));
-            	return date1;
+
+    public static LocalDate validateDateString(String message) {
+        boolean isValidInput = false;
+        Scanner scanner = new Scanner(System.in);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = null;
+
+        while (!isValidInput) {
+            System.out.print(message);
+            String input = scanner.nextLine();
+
+            try {
+                date = LocalDate.parse(input, dateFormatter);
+                System.out.println("You entered: " + date);
+                isValidInput = true;
+            } catch (Exception e) {
+                System.out.println("Invalid date format. Please enter date in YYYY-MM-DD format.");
+            }
+        }
+        return date;
     }
 }

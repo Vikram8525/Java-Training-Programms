@@ -1,16 +1,15 @@
-package com.chainsys.jfs.Stock;
+package com.chainsys.jfs.stockconnection;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.chainsys.jfs.newstock.ValidationClass;
-
 public class StockManagementMain implements StockManagementInterface {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         StockManagementMain stockManagementMain = new StockManagementMain(); // Create an instance
         Scanner scanner = new Scanner(System.in);
         List<StockManagementInformation> items = new ArrayList<>();
@@ -110,12 +109,24 @@ public class StockManagementMain implements StockManagementInterface {
                     String itemName = scanner.nextLine();
                     StockManagementInformation item = new StockManagementInformation(itemName);
                     items.add(item);
-                    System.out.println("Item added successfully!");
+                    try {
+                        // Convert LocalDate to java.util.Date
+                        LocalDate startDate = item.getStartDate();
+                        java.util.Date utilStartDate = java.sql.Date.valueOf(startDate);
+
+                        // Call addStock with the converted date
+                        Connectivity.addStock( 0, itemName, item.getItemQuantity(), utilStartDate);
+                        System.out.println("Item added successfully!");
+                    } catch (SQLException e) {
+                        System.out.println("Failed to add item to database: " + e.getMessage());
+                    }
                     break;
                 case 2:
-                    stockManagementMain.displayItemDetails(items); // Call non-static method using the instance
+                	Connectivity.displayStocks();
+                    //stockManagementMain.displayItemDetails(items); // Call non-static method using the instance
                     break;
                 case 3:
+                	//Connectivity.stockExpiry(items);
                     stockManagementMain.checkStockAgeInDays(items); // Call non-static method using the instance
                     break;
                 case 4:
@@ -132,6 +143,7 @@ public class StockManagementMain implements StockManagementInterface {
         scanner.close();
     }
 
+    @Override
     public void displayItemDetails(List<StockManagementInformation> items) {
         if (items.isEmpty()) {
             System.out.println("No items available!");
@@ -145,6 +157,7 @@ public class StockManagementMain implements StockManagementInterface {
         }
     }
 
+    @Override
     public void checkStockAgeInDays(List<StockManagementInformation> items) {
         if (items.isEmpty()) {
             System.out.println("No items available!");
@@ -174,6 +187,7 @@ public class StockManagementMain implements StockManagementInterface {
         }
     }
 
+    @Override
     public void checkStockAvailability(List<StockManagementInformation> items) {
         if (items.isEmpty()) {
             System.out.println("No items available!");
