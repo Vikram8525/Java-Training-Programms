@@ -1,4 +1,4 @@
-package com.chainsys.jfs.newstock;
+package com.chainsys.jfs.copyStock;
 
 public enum ItemStatus {
 	
@@ -8,4 +8,3 @@ public enum ItemStatus {
 	    FRESH_ITEM,
 	    OFFER_CLEAR
 	}
-

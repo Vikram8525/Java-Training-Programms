@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.chainsys.jfs.newstock.ValidationClass;
-
+import com.chainsys.jfs.stockconnection.ValidationClass;
 public class StockManagementMain implements StockManagementInterface {
 
     public static void main(String[] args) {

@@ -10,10 +10,18 @@ import java.util.Scanner;
 public class StockManagementMain implements StockManagementInterface {
 
     public static void main(String[] args) throws SQLException {
-        StockManagementMain stockManagementMain = new StockManagementMain(); // Create an instance
+        StockManagementMain stockManagementMain = new StockManagementMain(); 
         Scanner scanner = new Scanner(System.in);
         List<StockManagementInformation> items = new ArrayList<>();
         ValidationClass v1 = new ValidationClass();
+        
+        while(true) {
+        System.out.println("\t\t"+" .....WELCOME TO STOCK MANAGEMENT SYSTEM.....");
+        System.out.println("Are you an Employee or an Customer?..");
+        System.out.println("For Employee press 1..");
+        System.out.println("For Customer press 2..");
+        
+        
 
         String userName = "";
         String passWord = "";
@@ -26,121 +34,98 @@ public class StockManagementMain implements StockManagementInterface {
             System.out.println("Please Re-enter Valid Input: (yes or no)");
             choose = scanner.nextLine().toLowerCase();
         }
+         
+      
+        	
         if (choose.equals("no")) {
-            System.out.println("Please Sign Up");
-            while (true) {
-                System.out.println("Enter UserName:");
-                userName = scanner.nextLine();
-                if (!v1.validateString(userName)) {
-                    System.out.println("Invalid Username!");
-                } else {
-                    break;
-                }
-            }
-            while (true) {
-                System.out.println("Enter Password:");
-                passWord = scanner.nextLine();
-                if (!v1.isSpecialChar(passWord)) {
-                    System.out.println("Invalid Password!");
-                } else {
-                    break;
-                }
-            }
-            System.out.println("Signed Up Successfully!");
-            System.out.println("Please enter your credentials again for verification:");
-            while (true) {
-                System.out.println("Enter UserName:");
-                String inputName = scanner.nextLine();
-                System.out.println("Enter Password:");
-                String inputPass = scanner.nextLine();
-                if (inputName.equals(userName) && inputPass.equals(passWord)) {
-                    System.out.println("Verification successful!");
-                    break;
-                } else {
-                    System.out.println("Invalid username or password. Try again.");
-                }
-            }
-        } else if (choose.equals("yes")) {
-            String defaultUserName = "root";
-            String defaultPassword = "Root@123";
-
-            System.out.println("Please Log In!");
-            while (true) {
-                System.out.println("Enter UserName:");
-                name = scanner.nextLine();
-                if (!v1.validateString(name)) {
-                    System.out.println("Invalid Username!");
-                } else {
-                    break;
-                }
-            }
-            while (true) {
-                System.out.println("Enter Password:");
-                pass = scanner.nextLine();
-                if (!v1.isSpecialChar(pass)) {
-                    System.out.println("Invalid Password!");
-                } else {
-                    System.out.println("You have logged in successfully.");
-                    break;
-                }
+            System.out.println("Admin Signup..");
+            
+            Scanner sc = new Scanner(System.in);
+        	System.out.println("Enter Username ");
+        	userName = sc.next();
+        	System.out.println("Enter Password ");
+        	passWord = sc.next(); 
+        	Connectivity.addAdmin(userName, passWord);
+        	
+        		System.out.println("Enter Username ");
+            	name = sc.next();
+            	System.out.println("Enter Password ");
+            	pass = sc.next(); 
+        		
+        	Connectivity.adminLogin(userName, passWord);
+        	
+        
+        	
+        	}
+        else if (choose.equals("yes")) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("enter username ");
+            String username = sc.next();
+            System.out.println("enter password ");
+            String password = sc.next();
+            
+            boolean loggedIn = Connectivity.adminLogin(username, password);
+            
+            while (!loggedIn) {
+                
+                System.out.println("enter username ");
+                username = sc.next();
+                System.out.println("enter password ");
+                password = sc.next();
+                loggedIn = Connectivity.adminLogin(username, password);
             }
 
-            if (!name.equals(defaultUserName) || !pass.equals(defaultPassword)) {
-                System.out.println("Invalid username or password.");
-                return;
+            boolean exit = false;
+            while (!exit) {
+                System.out.println("\nStock Management System");
+                System.out.println("1. Add Item");
+                System.out.println("2. Display Item Details");
+                System.out.println("3. Check Stock Age in Days");
+                System.out.println("4. Check Stock Availability");
+                System.out.println("5. Exit");
+                System.out.print("Enter your choice: ");
+                           
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter item name: ");
+                        String itemName = scanner.nextLine();
+                        StockManagementInformation item = new StockManagementInformation(itemName);
+                        items.add(item);
+                        try {
+                            LocalDate startDate = item.getStartDate();
+                            java.util.Date utilStartDate = java.sql.Date.valueOf(startDate);
+                            Connectivity.addStock( 0, itemName, item.getItemQuantity(), utilStartDate);
+                            System.out.println("Item added successfully!");
+                        } catch (SQLException e) {
+                            System.out.println("Failed to add item to database: " + e.getMessage());
+                        }
+                        break;
+                    case 2:
+                        Connectivity.displayStocks();
+                        //stockManagementMain.displayItemDetails(items);
+                        break;
+                    case 3:
+                        Connectivity.checkStockAgeAndAvailability(items);
+                        //stockManagementMain.checkStockAgeInDays(items); 
+                        break;
+                    case 4:
+                        stockManagementMain.checkStockAvailability(items); 
+                        break;
+                    case 5:
+                        exit = true;
+                        System.out.println("Exiting Stock Management System.");
+                        break;
+                    default:
+                        System.out.println("Invalid choice! Please enter a number between 1 and 5.");
+                }
             }
         }
-
-        boolean exit = false;
-        while (!exit) {
-            System.out.println("\nStock Management System");
-            System.out.println("1. Add Item");
-            System.out.println("2. Display Item Details");
-            System.out.println("3. Check Stock Age in Days");
-            System.out.println("4. Check Stock Availability");
-            System.out.println("5. Exit");
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    System.out.print("Enter item name: ");
-                    String itemName = scanner.nextLine();
-                    StockManagementInformation item = new StockManagementInformation(itemName);
-                    items.add(item);
-                    try {
-                        // Convert LocalDate to java.util.Date
-                        LocalDate startDate = item.getStartDate();
-                        java.util.Date utilStartDate = java.sql.Date.valueOf(startDate);
-
-                        // Call addStock with the converted date
-                        Connectivity.addStock( 0, itemName, item.getItemQuantity(), utilStartDate);
-                        System.out.println("Item added successfully!");
-                    } catch (SQLException e) {
-                        System.out.println("Failed to add item to database: " + e.getMessage());
-                    }
-                    break;
-                case 2:
-                	Connectivity.displayStocks();
-                    //stockManagementMain.displayItemDetails(items); // Call non-static method using the instance
-                    break;
-                case 3:
-                	Connectivity.checkStockAgeAndAvailability(items);
-                    //stockManagementMain.checkStockAgeInDays(items); // Call non-static method using the instance
-                    break;
-                case 4:
-                    stockManagementMain.checkStockAvailability(items); // Call non-static method using the instance
-                    break;
-                case 5:
-                    exit = true;
-                    System.out.println("Exiting Stock Management System.");
-                    break;
-                default:
-                    System.out.println("Invalid choice! Please enter a number between 1 and 5.");
-            }
+           
         }
-        scanner.close();
+        
     }
 
     @Override

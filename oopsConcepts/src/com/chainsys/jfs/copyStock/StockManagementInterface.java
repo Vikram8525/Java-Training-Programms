@@ -1,4 +1,4 @@
-package com.chainsys.jfs.newstock;
+package com.chainsys.jfs.copyStock;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -9,4 +9,3 @@ public interface StockManagementInterface {
     void checkStockAgeInDays(List<StockManagementInformation> items);
     void checkStockAvailability(List<StockManagementInformation> items);
 }
-

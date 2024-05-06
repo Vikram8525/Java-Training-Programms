@@ -1,4 +1,4 @@
-package com.chainsys.jfs.stockconnection;
+package com.chainsys.jfs.copyStock;
 
 import java.sql.Connection;
 import java.sql.Date;
