@@ -47,7 +47,7 @@ public class StockManagementMain implements StockManagementInterface {
         boolean loggedIn = Connectivity.adminLogin(username, password);
 
         while (!loggedIn) {
-            System.out.println("Incorrect username or password. Please retry...");
+           
             System.out.println("Enter Username:");
             username = scanner.nextLine();
             System.out.println("Enter Password:");
