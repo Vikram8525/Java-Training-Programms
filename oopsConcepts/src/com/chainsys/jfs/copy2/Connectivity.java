@@ -157,6 +157,26 @@ public class Connectivity {
     	System.out.println("added : "+rows);
     	
     }
+    public static boolean deleteStock(String itemName) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = Connectivity.getConnection();
+            String deleteQuery = "DELETE FROM stock WHERE item_name = ?";
+            statement = connection.prepareStatement(deleteQuery);
+            statement.setString(1, itemName);
+            int rowsDeleted = statement.executeUpdate();
+            return rowsDeleted > 0;
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
+
     public static boolean isAdminSupervisor(String username, String password) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
@@ -170,7 +190,7 @@ public class Connectivity {
             statement.setString(2, password);
             resultSet = statement.executeQuery();
 
-            return resultSet.next(); // Returns true if supervisor, false otherwise
+            return resultSet.next(); 
         } finally {
             if (resultSet != null) {
                 resultSet.close();
