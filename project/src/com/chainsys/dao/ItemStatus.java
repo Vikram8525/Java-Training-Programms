@@ -1,4 +1,4 @@
-package com.chainsys.test;
+package com.chainsys.dao;
 
 public enum ItemStatus {
 	

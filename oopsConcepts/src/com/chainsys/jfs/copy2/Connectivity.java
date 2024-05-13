@@ -13,6 +13,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Connectivity {
     public static Connection getConnection() throws SQLException {
@@ -168,6 +169,60 @@ public class Connectivity {
             int rowsDeleted = statement.executeUpdate();
             return rowsDeleted > 0;
         } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
+
+    public static void buyStock() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the item name you want to buy: ");
+        String itemName = scanner.nextLine();
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = Connectivity.getConnection();
+            String query = "SELECT item_quantity FROM stock WHERE item_name = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, itemName);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int availableQuantity = resultSet.getInt("item_quantity");
+                System.out.println("Available quantity for " + itemName + " is: " + availableQuantity);
+
+                System.out.println("Enter the quantity you want to buy: ");
+                int quantityToBuy = scanner.nextInt();
+
+                if (quantityToBuy <= availableQuantity) {
+                    // Update stock quantity
+                    String updateQuery = "UPDATE stock SET item_quantity = ? WHERE item_name = ?";
+                    statement = connection.prepareStatement(updateQuery);
+                    statement.setInt(1, availableQuantity - quantityToBuy);
+                    statement.setString(2, itemName);
+                    int rowsUpdated = statement.executeUpdate();
+                    if (rowsUpdated > 0) {
+                        System.out.println(quantityToBuy + " " + itemName + "(s) added to your cart.");
+                    } else {
+                        System.out.println("Failed to update stock quantity.");
+                    }
+                } else {
+                    System.out.println("Insufficient stock! Please choose a lower quantity.");
+                }
+            } else {
+                System.out.println("Item '" + itemName + "' not found in stock.");
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
             if (statement != null) {
                 statement.close();
             }

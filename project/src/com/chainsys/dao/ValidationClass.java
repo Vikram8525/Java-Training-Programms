@@ -1,4 +1,4 @@
-package com.chainsys.test;
+package com.chainsys.dao;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -184,25 +184,34 @@ public class ValidationClass {
     		    return matcher.matches();
     		}
     		
-    		public static String validateDateString() {
-    	        boolean isValidInput = false;
-    	        Scanner scanner = new Scanner(System.in);
-    	        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    		public static LocalDate validateDateString(String message) {
+    		    boolean isValidInput = false;
+    		    Scanner scanner = new Scanner(System.in);
+    		    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    		    LocalDate date = null;
 
-    	        while (!isValidInput) {
-    	            System.out.print("Enter the date (YYYY-MM-DD): ");
-    	            String input = scanner.nextLine();
+    		    while (!isValidInput) {
+    		        System.out.print(message);
+    		        String input = scanner.nextLine();
 
-    	            try {
-    	                LocalDate.parse(input, dateFormatter);
-    	                System.out.println("You entered: " + input);
-    	                isValidInput = true;
-    	            } catch (Exception e) {
-    	                System.out.println("Invalid date format. Please enter date in YYYY-MM-DD format.");
-    	            }
-    	        }
-    	        return null; 
-    	    }
+    		        try {
+    		            date = LocalDate.parse(input, dateFormatter);
+    		            LocalDate currentDate = LocalDate.now();
+    		            
+    		            if (date.isAfter(currentDate)) {
+    		            	System.err.println("the current date is :" + currentDate);
+    		                System.out.println("Error: Date cannot be in the future. Please enter a valid date.");
+    		            } else {
+    		                System.out.println("You entered date: " + date);
+    		                isValidInput = true;
+    		            }
+    		        } catch (Exception e) {
+    		            System.out.println("Invalid date format. Please enter date in YYYY-MM-DD format.");
+    		        }
+    		    }
+    		    return date;
+    		}
+
     		
      }
 

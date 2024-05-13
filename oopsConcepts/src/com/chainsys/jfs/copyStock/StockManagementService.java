@@ -1,56 +1,19 @@
-package com.chainsys.jfs.copy2;
+package com.chainsys.jfs.copyStock;
 
 import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class StockManagementMain implements StockManagementInterface {
+public class StockManagementService implements StockService {
 
-    public static void main(String[] args) throws SQLException {
-        Scanner scanner = new Scanner(System.in);
-        List<StockManagementInformation> items = new ArrayList<>();
-
-        while (true) {
-            System.out.println("\t\t" + " .....WELCOME TO STOCK MANAGEMENT SYSTEM.....");
-            System.out.println("Are you an Employee or a Customer?");
-            System.out.println("For Employee, press 1.");
-            System.out.println("For Customer, press 2.");
-            System.out.println("For Exiting, press 3.");
-            System.out.println("Enter your choice: ");
-            System.out.println("==================================");
-
-            int userType = scanner.nextInt();
-            scanner.nextLine(); 
-
-            switch (userType) {
-                case 1:
-                    employeeMenu(scanner, items);
-                    break;
-                case 2:
-                    customerMenu(items);
-                    break;
-                case 3:
-                    System.out.println("Exiting the Stock Management System..");
-                    System.out.println("Thanks for visiting..");
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Invalid choice! Please enter 1 for Employee or 2 for Customer.");
-            }
-        }
-    }
-
-    private static void employeeMenu(Scanner scanner, List<StockManagementInformation> items) throws SQLException {
-        System.out.println("\t\t" +"..Welcome Employee..");
+    @Override
+    public void employeeMenu(Scanner scanner, List<StockManagementInformation> items) throws SQLException {
+        // Implementation
+        System.out.println("\t\t" + "..Welcome Employee..");
         System.out.println("Do you have an Employee Account (yes or no)");
         String hasAccount = scanner.nextLine().toLowerCase();
 
@@ -75,7 +38,7 @@ public class StockManagementMain implements StockManagementInterface {
                     System.out.println("Incorrect supervisor password. Assigned as normal employee.");
                 }
             } else {
-                addEmployee(username, password, isSupervisor); 
+                addEmployee(username, password, isSupervisor);
                 System.out.println("Employee Account Created Successfully!");
             }
         } else if (hasAccount.equals("yes")) {
@@ -96,17 +59,18 @@ public class StockManagementMain implements StockManagementInterface {
         }
     }
 
-    private static void employeeMenuOptions(boolean isSupervisor, Scanner scanner, List<StockManagementInformation> items) throws SQLException {
+    @Override
+    public void employeeMenuOptions(boolean isSupervisor, Scanner scanner, List<StockManagementInformation> items) throws SQLException {
+        // Implementation
         boolean exitEmployee = false;
         while (!exitEmployee) {
             System.out.println("\nEmployee Menu:");
             if (isSupervisor) {
-            	System.out.println("\t\t" +"..Welcome Supervisor..");
+                System.out.println("\t\t" + "..Welcome Supervisor..");
+            } else {
+                System.out.println("\t\t" + "..Welcome Employee..");
             }
-            else {
-            	System.out.println("\t\t" +"..Welcome Employee..");
-            }
-            
+
             System.out.println("1. View Stock");
             if (isSupervisor) {
                 System.out.println("2. Add Stock");
@@ -122,7 +86,7 @@ public class StockManagementMain implements StockManagementInterface {
 
             switch (choice) {
                 case 1:
-                    Connectivity.displayStocks();
+                    StockManagementCRUD.displayStocks();
                     break;
                 case 2:
                     if (isSupervisor) {
@@ -139,7 +103,7 @@ public class StockManagementMain implements StockManagementInterface {
                     }
                     break;
                 case 4:
-                    Connectivity.checkStockAgeAndAvailability(items);
+                    StockManagementCRUD.checkStockAgeAndAvailability(items);
                     break;
                 case 5:
                     stockAvailability(items);
@@ -154,7 +118,9 @@ public class StockManagementMain implements StockManagementInterface {
         }
     }
 
-    private static void addStock(List<StockManagementInformation> items) throws SQLException {
+    @Override
+    public void addStock(List<StockManagementInformation> items) throws SQLException {
+        // Implementation
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter item name: ");
         String itemName = scanner.nextLine();
@@ -163,30 +129,33 @@ public class StockManagementMain implements StockManagementInterface {
         try {
             LocalDate startDate = item.getStartDate();
             java.util.Date utilStartDate = java.sql.Date.valueOf(startDate);
-            Connectivity.addStock(0, itemName, item.getItemQuantity(), utilStartDate);
+            StockManagementCRUD.addStock(0, itemName, item.getItemQuantity(), utilStartDate);
             System.out.println("Item added successfully!");
         } catch (SQLException e) {
             System.out.println("Failed to add item to database: " + e.getMessage());
         }
     }
 
-    private static void deleteStock(List<StockManagementInformation> items) throws SQLException {
+    @Override
+    public void deleteStock(List<StockManagementInformation> items) throws SQLException {
+        // Implementation
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the name of the item to delete: ");
         String itemName = scanner.nextLine();
 
-        boolean success = Connectivity.deleteStock(itemName);
+        boolean success = StockManagementCRUD.deleteStock(itemName);
         if (success) {
             System.out.println("Item '" + itemName + "' deleted successfully.");
-      
+
             items.removeIf(item -> item.getItemName().equalsIgnoreCase(itemName));
         } else {
             System.out.println("Failed to delete item '" + itemName + "'.");
         }
     }
 
-
-    private static void customerMenu(List<StockManagementInformation> items) throws SQLException {
+    @Override
+    public void customerMenu(List<StockManagementInformation> items) throws SQLException {
+        // Implementation
         Scanner scanner = new Scanner(System.in);
         boolean exitCustomer = false;
         while (!exitCustomer) {
@@ -202,13 +171,13 @@ public class StockManagementMain implements StockManagementInterface {
 
             switch (choice) {
                 case 1:
-                    Connectivity.displayStocks();
+                    StockManagementCRUD.displayStocks();
                     break;
                 case 2:
-                    Connectivity.checkStockAgeAndAvailability(items);
+                    StockManagementCRUD.checkStockAgeAndAvailability(items);
                     break;
                 case 3:
-                    Connectivity.buyStock();
+                    StockManagementCRUD.buyStock();
                     break;
                 case 4:
                     exitCustomer = true;
@@ -220,7 +189,9 @@ public class StockManagementMain implements StockManagementInterface {
         }
     }
 
-    private static void addEmployee(String username, String password, boolean isSupervisor) throws SQLException {
+    @Override
+    public void addEmployee(String username, String password, boolean isSupervisor) throws SQLException {
+        // Implementation
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -244,7 +215,9 @@ public class StockManagementMain implements StockManagementInterface {
         }
     }
 
-    private static boolean adminLogin(String name, String passWord) throws SQLException {
+    @Override
+    public boolean adminLogin(String name, String passWord) throws SQLException {
+        // Implementation
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -271,7 +244,9 @@ public class StockManagementMain implements StockManagementInterface {
         return loggedIn;
     }
 
-    private static boolean isAdminSupervisor(String username, String password) throws SQLException {
+    @Override
+    public boolean isAdminSupervisor(String username, String password) throws SQLException {
+        // Implementation
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -300,7 +275,10 @@ public class StockManagementMain implements StockManagementInterface {
         }
         return isSupervisor;
     }
-    private static void stockAvailability(List<StockManagementInformation> items) throws SQLException {
+
+    @Override
+    public void stockAvailability(List<StockManagementInformation> items) throws SQLException {
+        // Implementation
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
@@ -334,7 +312,9 @@ public class StockManagementMain implements StockManagementInterface {
         }
     }
 
-    private static void checkAvailability(String status) throws SQLException {
+    @Override
+    public void checkAvailability(String status) throws SQLException {
+        // Implementation
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -381,5 +361,4 @@ public class StockManagementMain implements StockManagementInterface {
             }
         }
     }
-
 }

@@ -1,11 +1,11 @@
-package com.chainsys.test;
+package com.chainsys.dao;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Scanner;
 
-//import com.chainsys.jfs.pojo.ValidationClass;
 
 public class StockManagementInformation {
     private String itemName;
@@ -16,7 +16,6 @@ public class StockManagementInformation {
     public StockManagementInformation(String itemName) {
         this.itemName = itemName;
         ValidationClass iv = new ValidationClass();
-        
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter the ID of the item: ");
@@ -24,7 +23,7 @@ public class StockManagementInformation {
         System.out.print("Enter the number of items available in the store: ");
         this.itemQuantity = iv.validateInteger();
 
-        this.startDate = validateDateString("Enter the last date that the stock has been added (YYYY-MM-DD): ");
+        this.startDate =  iv.validateDateString("Enter the last date that the stock has been added (YYYY-MM-DD): ");
     }
 
     public String getItemName() {

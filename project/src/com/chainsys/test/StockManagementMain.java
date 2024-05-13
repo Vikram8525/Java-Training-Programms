@@ -1,9 +1,12 @@
-package com.chainsys.jfs.copyStock;
+package com.chainsys.test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import com.chainsys.dao.StockManagementInformation;
+import com.chainsys.dao.StockManagementService;
 
 public class StockManagementMain {
     public static void main(String[] args) throws SQLException {
