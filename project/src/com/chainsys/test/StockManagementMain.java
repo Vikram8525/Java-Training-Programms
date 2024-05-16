@@ -20,8 +20,9 @@ public class StockManagementMain {
             System.out.println("For Employee, press 1.");
             System.out.println("For Customer, press 2.");
             System.out.println("For Exiting, press 3.");
-            System.out.println("Enter your choice: ");
             System.out.println("==================================");
+            System.out.println("Enter your choice: ");
+            
 
             int userType = scanner.nextInt();
             scanner.nextLine();
