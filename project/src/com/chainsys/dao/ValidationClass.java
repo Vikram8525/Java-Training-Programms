@@ -102,22 +102,22 @@ public class ValidationClass {
     		public static String validateEmailAddress() {
     		    Scanner scanner = new Scanner(System.in);
     		    boolean isValidInput = false;
-
+    		    String email=null;
     		    while (!isValidInput) {
-    		        System.out.println(" (eg : mailid12@gmail.com) ");
-    		        String email = scanner.nextLine();
+    		        System.out.println("Enter your Mail Id (eg : mailid12@gmail.com) ");
+    		        email = scanner.nextLine();
 
     		        if (isValidEmail(email)) {
     		            System.out.println("Valid email address: " + email);
     		            isValidInput = true;
     		        } else {
-    		            System.out.println("Invalid email address. \nPlease enter a valid email. Your email must contain:\n"
-    		                    + "at least one lowercase letter (a-z).\n"
+    		            System.out.println("Invalid email address. \nPlease enter a valid email.\n Your email must contain:\n"
+    		                    + "Only lowercase letter (a-z).\n"
     		                    + "at least one special character (@#$%^&+=).\n"
     		                    + "And must have at least 8 characters. It should not contain any capital letters.");
     		        }
     		    }
-    		    return null;
+    		    return email;
     		}
 
     		public static boolean isValidEmail(String email) {
@@ -157,10 +157,10 @@ public class ValidationClass {
     		public static String validatePassword() {
     		    Scanner scanner = new Scanner(System.in);
     		    boolean isValidInput = false;
-
+    		    String password=null;
     		    while (!isValidInput) {
-    		        System.out.println(" (eg : Password@123) ");
-    		        String password = scanner.nextLine();
+    		        System.out.println("Enter Your Password (eg : Password@123) ");
+    		        password = scanner.nextLine();
 
     		        if (isValidPassword(password)) {
     		            System.out.println("Valid password: " + password);
@@ -174,7 +174,7 @@ public class ValidationClass {
     		                    + "And must have at least 8 characters.");
     		        }
     		    }
-    		    return null;
+    		    return password;
     		}
 
     		public static boolean isValidPassword(String password) {
@@ -212,7 +212,38 @@ public class ValidationClass {
     		    return date;
     		}
 
-    		
+    		public static String validatePhoneNumber() {
+    		    Scanner scanner = new Scanner(System.in);
+    		    boolean isValidInput = false;
+    		    String phoneNumber=null;
+    		    while (!isValidInput) {
+    		        System.out.println(" Enter your Mobile number (eg : 6XXXXXXXXX, 7XXXXXXXXX, 8XXXXXXXXX, 9XXXXXXXXX) ");
+    		         phoneNumber = scanner.nextLine();
+
+    		        if (isValidPhoneNumber(phoneNumber)) {
+    		            System.out.println("Valid phone number: " + phoneNumber);
+    		            isValidInput = true;
+    		        } else {
+    		            System.out.println("Invalid phone number. Please enter a valid 10-digit phone number starting with 6, 7, 8, or 9 and without the '+' sign.");
+    		        }
+    		    }
+    		    return phoneNumber;
+    		}
+
+    		public static boolean isValidPhoneNumber(String phoneNumber) {
+    		    // Regular expression for validating 10-digit phone numbers starting with 6, 7, 8, or 9 and without the '+'
+    		    String phoneRegex = "^[6-9]\\d{9}$";
+
+    		    // Compile the pattern
+    		    Pattern pattern = Pattern.compile(phoneRegex);
+
+    		    // Match the given phone number with the pattern
+    		    Matcher matcher = pattern.matcher(phoneNumber);
+
+    		    // Return true if the phone number matches the pattern, false otherwise
+    		    return matcher.matches();
+    		}
+
      }
 
 

@@ -22,7 +22,7 @@ public class StockManagementMain {
             System.out.println("For Exiting, press 3.");
             System.out.println("==================================");
             System.out.println("Enter your choice: ");
-            
+           
 
             int userType = scanner.nextInt();
             scanner.nextLine();

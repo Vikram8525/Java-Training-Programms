@@ -81,11 +81,11 @@ public class StockManagementCRUD {
                         System.out.println("==============================================");
                     }
 
-//                    for (StockManagementInformation item : items) {
-//                        if (itemName.equals(item.getItemName())) {
-//                            item.Display();
-//                        }
-//                    }
+                    for (StockManagementInformation item : items) {
+                        if (itemName.equals(item.getItemName())) {
+                            item.Display();
+                        }
+                    }
                 }
             }
         }

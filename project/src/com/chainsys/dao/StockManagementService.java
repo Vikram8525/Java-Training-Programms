@@ -1,13 +1,18 @@
 package com.chainsys.dao;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
+import com.chainsys.model.CustomerPojo;
 import com.chainsys.util.Connectivity;
 import com.chainsys.util.StockManagementCRUD;
 
@@ -159,7 +164,49 @@ public class StockManagementService implements StockService {
     @Override
     public void customerMenu(List<StockManagementInformation> items) throws SQLException {
         // Implementation
-        Scanner scanner = new Scanner(System.in);
+    	 Scanner scanner = new Scanner(System.in);
+    	 CustomerPojo cp = new CustomerPojo();
+    	 ValidationClass vc = new ValidationClass();
+    	 //start
+    	 
+    	System.out.println("\t\t" + "..Welcome Customer..");
+        System.out.println("Do you have a Customer Account (yes or no)");
+        String hasAccount = scanner.nextLine().toLowerCase();
+
+        if (hasAccount.equals("no")) {
+            // Register new employee
+            System.out.println("...Creating Customer Account...");
+            System.out.println("Enter your name: ");
+            String username = scanner.nextLine();
+            int uniqueID = generateUniqueID();
+            System.out.println("Your unique id is :" + uniqueID);
+            System.out.println("----------Remember this id----------");
+            String number = vc.validatePhoneNumber();
+            String email = vc.validateEmailAddress();
+            String password = vc.validatePassword();
+            System.out.println("Enter your address :");
+            String address = scanner.nextLine();
+            addCustomer(username, uniqueID, number, email, password, address);
+            }
+   
+        
+    else if (hasAccount.equals("yes")) {
+            System.out.println("Enter your Customer Id ");
+            String id = scanner.nextLine();
+            System.out.println("Enter your password: ");
+            String password = scanner.nextLine();
+
+            if (customerLogin(id, password)) {
+                System.out.println("Login Successful!");
+                
+             
+            } else {
+                System.out.println("Incorrect Id or password. Please try again.");
+            }
+        } else {
+            System.out.println("Invalid choice! Please enter 'yes' or 'no'.");
+        }
+       // end
         boolean exitCustomer = false;
         while (!exitCustomer) {
             System.out.println("\nCustomer Menu:");
@@ -364,4 +411,139 @@ public class StockManagementService implements StockService {
             }
         }
     }
+    // start
+    // Method to generate a random ID number
+    private static int generateRandomID() {
+        Random random = new Random();
+        return 1000 + random.nextInt(9000); // Generate a 4-digit random number
+    }
+
+    // Method to check if the generated ID number already exists in the database
+    private static boolean isIDExists(int id) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Customer WHERE id = ?";
+        try (Connection conn = Connectivity.getConnection();
+             PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0; // Return true if ID exists, false otherwise
+                }
+            }
+        }
+        return false;
+    }
+
+    // Method to generate a unique ID number
+    private static int generateUniqueID() throws SQLException {
+        int id;
+        do {
+            id = generateRandomID();
+        } while (isIDExists(id)); // Generate new ID until it's unique
+        return id;
+    }
+  
+    public void addCustomer(String customerName, int id, String mobileNumber, String mailId, String password, String address) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = Connectivity.getConnection();
+            String insertQuery = "INSERT INTO Customer (customerName, id, mobileNumber, mailId, password, address, lastVisitedDate) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            statement = connection.prepareStatement(insertQuery);
+            statement.setString(1, customerName);
+            statement.setInt(2, id);
+            statement.setString(3, mobileNumber);
+            statement.setString(4, mailId);
+            statement.setString(5, password);
+            statement.setString(6, address);
+            statement.setDate(7,new java.sql.Date( new Date().getTime()));
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Customer added successfully!");
+            }
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
+    
+    
+//    public boolean customerLogin(String id, String passWord) throws SQLException {
+//        Connection connection = null;
+//        PreparedStatement statement = null;
+//        ResultSet resultSet = null;
+//        boolean loggedIn = false;
+//        try {
+//            connection = Connectivity.getConnection();
+//            String loginQuery = "SELECT * FROM Customer WHERE id = ? AND password = ?";
+//            statement = connection.prepareStatement(loginQuery);
+//            statement.setString(1, id);
+//            statement.setString(2, passWord);
+//            resultSet = statement.executeQuery();
+//            loggedIn = resultSet.next();
+//        } finally {
+//            if (resultSet != null) {
+//                resultSet.close();
+//            }
+//            if (statement != null) {
+//                statement.close();
+//            }
+//            if (connection != null) {
+//                connection.close();
+//            }
+//        }
+//        return loggedIn;
+//    }
+
+    public boolean customerLogin(String id, String passWord) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean loggedIn = false;
+        try {
+            connection = Connectivity.getConnection();
+            String loginQuery = "SELECT * FROM Customer WHERE id = ? AND password = ?";
+            statement = connection.prepareStatement(loginQuery);
+            statement.setString(1, id);
+            statement.setString(2, passWord);
+            resultSet = statement.executeQuery();
+            loggedIn = resultSet.next();
+            
+            if (loggedIn) {
+                // Get the lastVisitedDate from the ResultSet
+                Date lastVisitedDate = resultSet.getDate("lastVisitedDate");
+                
+                // Calculate the number of days since the last visit
+                Date currentDate = new Date();
+                long milliDif = currentDate.getTime() - lastVisitedDate.getTime();
+                long daysSinceLastVisit = TimeUnit.DAYS.convert(milliDif, TimeUnit.MILLISECONDS);
+                
+                // Print the number of days since the last visit
+                System.out.println("Days since last visit: " + daysSinceLastVisit);
+                
+                // Update the lastVisitedDate to current date in the database
+                String updateQuery = "UPDATE Customer SET lastVisitedDate = ? WHERE id = ?";
+                statement = connection.prepareStatement(updateQuery);
+                statement.setDate(1, new java.sql.Date(currentDate.getTime()));
+                statement.setString(2, id);
+                statement.executeUpdate();
+            }
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return loggedIn;
+    }
+
 }

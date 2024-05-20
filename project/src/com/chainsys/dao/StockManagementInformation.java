@@ -41,56 +41,56 @@ public class StockManagementInformation {
     public int getItemQuantity() {
         return itemQuantity;
     }
-//
-//    public ItemStatus getItemStatus(Period period) {
-//        int years = period.getYears();
-//        int months = period.getMonths();
-//        int days = period.getDays();
-//
-//        if (years > 1 && years <= 2) {
-//            return ItemStatus.OFFER_CLEAR;
-//        } else if (months >= 5 && months < 11) {
-//            return ItemStatus.RESTOCK;
-//        } else if (months < 5 && months >= 2) {
-//            return ItemStatus.NEW_ARRIVAL;
-//        } else if (days < 25) {
-//            return ItemStatus.FRESH_ITEM;
-//        } else {
-//            return ItemStatus.CLEAR_ITEM;
-//        }
-//    }
-//
-//    public void Display() {
-//        if (itemQuantity < 50) {
-//            System.out.println("The stock will be depleted.");
-//            System.out.println("The stock must be added.");
-//        } else {
-//            System.out.println("There is enough amount of stock.");
-//        }
-//    }
-//
-//    public Period calculatePeriodBetween(LocalDate startDate, LocalDate endDate) {
-//        return Period.between(startDate, endDate);
-//    }
-//
-//    public static LocalDate validateDateString(String message) {
-//        boolean isValidInput = false;
-//        Scanner scanner = new Scanner(System.in);
-//        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDate date = null;
-//
-//        while (!isValidInput) {
-//            System.out.print(message);
-//            String input = scanner.nextLine();
-//
-//            try {
-//                date = LocalDate.parse(input, dateFormatter);
-//                System.out.println("You entered: " + date);
-//                isValidInput = true;
-//            } catch (Exception e) {
-//                System.out.println("Invalid date format. Please enter date in YYYY-MM-DD format.");
-//            }
-//        }
-//        return date;
-//    }
+
+    public ItemStatus getItemStatus(Period period) {
+        int years = period.getYears();
+        int months = period.getMonths();
+        int days = period.getDays();
+
+        if (years > 1 && years <= 2) {
+            return ItemStatus.OFFER_CLEAR;
+        } else if (months >= 5 && months < 11) {
+            return ItemStatus.RESTOCK;
+        } else if (months < 5 && months >= 2) {
+            return ItemStatus.NEW_ARRIVAL;
+        } else if (days < 25) {
+            return ItemStatus.FRESH_ITEM;
+        } else {
+            return ItemStatus.CLEAR_ITEM;
+        }
+    }
+
+    public void Display() {
+        if (itemQuantity < 50) {
+            System.out.println("The stock will be depleted.");
+            System.out.println("The stock must be added.");
+        } else {
+            System.out.println("There is enough amount of stock.");
+        }
+    }
+
+    public Period calculatePeriodBetween(LocalDate startDate, LocalDate endDate) {
+        return Period.between(startDate, endDate);
+    }
+
+    public static LocalDate validateDateString(String message) {
+        boolean isValidInput = false;
+        Scanner scanner = new Scanner(System.in);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = null;
+
+        while (!isValidInput) {
+            System.out.print(message);
+            String input = scanner.nextLine();
+
+            try {
+                date = LocalDate.parse(input, dateFormatter);
+                System.out.println("You entered: " + date);
+                isValidInput = true;
+            } catch (Exception e) {
+                System.out.println("Invalid date format. Please enter date in YYYY-MM-DD format.");
+            }
+        }
+        return date;
+    }
 }
