@@ -7,10 +7,14 @@ import java.util.Date;
 import java.util.Scanner;
 
 
+import java.time.LocalDate;
+import java.util.Scanner;
+
 public class StockManagementInformation {
     private String itemName;
     private int itemId;
     private int itemQuantity;
+    private double price;
     private LocalDate startDate;
 
     public StockManagementInformation(String itemName) {
@@ -22,8 +26,9 @@ public class StockManagementInformation {
         this.itemId = iv.validateInteger();
         System.out.print("Enter the number of items available in the store: ");
         this.itemQuantity = iv.validateInteger();
-
-        this.startDate =  iv.validateDateString("Enter the last date that the stock has been added (YYYY-MM-DD): ");
+        System.out.print("Enter the price of the item: ");
+        this.price = iv.validateDouble();
+        this.startDate = iv.validateDateString("Enter the last date that the stock has been added (YYYY-MM-DD): ");
     }
 
     public String getItemName() {
@@ -41,6 +46,15 @@ public class StockManagementInformation {
     public int getItemQuantity() {
         return itemQuantity;
     }
+    
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
 
     public ItemStatus getItemStatus(Period period) {
         int years = period.getYears();

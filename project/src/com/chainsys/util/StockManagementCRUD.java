@@ -16,13 +16,14 @@ import com.chainsys.dao.StockManagementInformation;
 
 public class StockManagementCRUD {
 
-    public static void addStock(int itemId , String itemName, int itemQuantity, java.util.Date startDate) throws SQLException {
+    public static void addStock(int itemId , String itemName, int itemQuantity, java.util.Date startDate, double price) throws SQLException {
         try (Connection connection = Connectivity.getConnection();
-             PreparedStatement statement = connection.prepareStatement("insert into stock values (?,?,?,?)")) {
+             PreparedStatement statement = connection.prepareStatement("insert into stock values (?,?,?,?,?)")) {
             statement.setInt(1, itemId);
             statement.setString(2, itemName);
             statement.setInt(3, itemQuantity);
             statement.setDate(4, new java.sql.Date(startDate.getTime()));
+            statement.setDouble(5, price);
             int executeUpdate = statement.executeUpdate();
             System.out.println(executeUpdate);
         }
@@ -81,11 +82,7 @@ public class StockManagementCRUD {
                         System.out.println("==============================================");
                     }
 
-                    for (StockManagementInformation item : items) {
-                        if (itemName.equals(item.getItemName())) {
-                            item.Display();
-                        }
-                    }
+               
                 }
             }
         }

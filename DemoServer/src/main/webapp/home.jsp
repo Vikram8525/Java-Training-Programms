@@ -169,11 +169,11 @@
         <form action="DemoServlet">
           <table>
             <tr>
-              <td><label for="fname"><h2>Pirate Name:<span style="color: crimson;">*</span></h2></label></td>
+              <td><label for="fname"><h2>Name:<span style="color: crimson;">*</span></h2></label></td>
               <td><input type="text" id="fname" name="fname" required minlength="2" maxlength="30" placeholder="Enter your first name"></td>
             </tr>
             <tr>
-              <td><label for="phone"><h2>Transponder Snail Number:<span style="color: crimson;">*</span></h2></label></td>
+              <td><label for="phone"><h2>Phone Number:<span style="color: crimson;">*</span></h2></label></td>
               <td><input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="Enter your mobile number"></td>
             </tr>
             <tr>

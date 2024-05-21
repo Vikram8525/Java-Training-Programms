@@ -2,6 +2,9 @@ package com.chainsys.demo;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +15,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.chainsys.util.Connectivity;
+
 /**
  * Servlet implementation class DemoServlet
  */
 @WebServlet("/DemoServlet")
 public class DemoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+	DemoServerPojo demo = new DemoServerPojo();
 	Demo d = new Demo();
     /**
      * @see HttpServlet#HttpServlet()
@@ -38,12 +43,24 @@ public class DemoServlet extends HttpServlet {
         String pass = request.getParameter("password");
         String rpass = request.getParameter("repassword");
         d.add(name, phone, date, pass, rpass);
+        demo.setName(name);
+        demo.setPhone(phone);
+        demo.setDate(date);
+        demo.setPass(pass);
+        demo.setRpass(rpass);
+        
+        try {
+			d.registerUser(demo);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         request.setAttribute("viewing",d.Display());
         request.getRequestDispatcher("displayData.jsp").forward(request, response);
-        
-    }
 
+    }
+    
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

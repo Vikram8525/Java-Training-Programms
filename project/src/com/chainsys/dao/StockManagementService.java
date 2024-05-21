@@ -21,6 +21,7 @@ public class StockManagementService implements StockService {
     @Override
     public void employeeMenu(Scanner scanner, List<StockManagementInformation> items) throws SQLException {
         // Implementation
+    	while (true) {
         System.out.println("\t\t" + "..Welcome Employee..");
         System.out.println("Do you have an Employee Account (yes or no)");
         String hasAccount = scanner.nextLine().toLowerCase();
@@ -49,22 +50,25 @@ public class StockManagementService implements StockService {
                 addEmployee(username, password, isSupervisor);
                 System.out.println("Employee Account Created Successfully!");
             }
-        } else if (hasAccount.equals("yes")) {
+        } 
+        
+        else if (hasAccount.equals("yes")) {
             System.out.println("Enter your username: ");
             String username = scanner.nextLine();
             System.out.println("Enter your password: ");
             String password = scanner.nextLine();
-
+            
             if (adminLogin(username, password)) {
                 System.out.println("Login Successful!");
                 boolean isSupervisor = isAdminSupervisor(username, password);
                 employeeMenuOptions(isSupervisor, scanner, items);
             } else {
-                System.out.println("Incorrect username or password. Please try again.");
+                System.out.println("Incorrect username or password. Please try again. \nIf you dont have an account create a new account by clicking 'no'");
             }
         } else {
             System.out.println("Invalid choice! Please enter 'yes' or 'no'.");
         }
+    	}
     }
 
     @Override
@@ -137,7 +141,7 @@ public class StockManagementService implements StockService {
         try {
             LocalDate startDate = item.getStartDate();
             java.util.Date utilStartDate = java.sql.Date.valueOf(startDate);
-            StockManagementCRUD.addStock(0, itemName, item.getItemQuantity(), utilStartDate);
+            StockManagementCRUD.addStock(0, itemName, item.getItemQuantity(), utilStartDate, item.getPrice());
             System.out.println("Item added successfully!");
         } catch (SQLException e) {
             System.out.println("Failed to add item to database: " + e.getMessage());
@@ -164,9 +168,10 @@ public class StockManagementService implements StockService {
     @Override
     public void customerMenu(List<StockManagementInformation> items) throws SQLException {
         // Implementation
-    	 Scanner scanner = new Scanner(System.in);
+    	Scanner scanner = new Scanner(System.in);
     	 CustomerPojo cp = new CustomerPojo();
     	 ValidationClass vc = new ValidationClass();
+    	 StockManagementService service = new StockManagementService();
     	 //start
     	 
     	System.out.println("\t\t" + "..Welcome Customer..");
@@ -189,24 +194,32 @@ public class StockManagementService implements StockService {
             addCustomer(username, uniqueID, number, email, password, address);
             }
    
-        
-    else if (hasAccount.equals("yes")) {
-            System.out.println("Enter your Customer Id ");
-            String id = scanner.nextLine();
-            System.out.println("Enter your password: ");
-            String password = scanner.nextLine();
-
-            if (customerLogin(id, password)) {
-                System.out.println("Login Successful!");
+        else if (hasAccount.equals("yes")) {
+            boolean loggedIn = false;
+            while (!loggedIn) {
+                System.out.println("Enter your Customer Id (or type 'end' to cancel): ");
+                String id = scanner.nextLine();
                 
-             
-            } else {
-                System.out.println("Incorrect Id or password. Please try again.");
+                if (id.equalsIgnoreCase("end")) {
+                	service.customerMenu(items);
+                    break; // Break the loop if the user inputs "end"
+                    
+                }
+                
+                System.out.println("Enter your password: ");
+                String password = scanner.nextLine();
+                
+                if (customerLogin(id, password)) {
+                    System.out.println("Login Successful!");
+                    loggedIn = true;
+                } else {
+                    System.out.println("Incorrect Id or password. Please try again.");
+                }
             }
         } else {
             System.out.println("Invalid choice! Please enter 'yes' or 'no'.");
         }
-       // end
+
         boolean exitCustomer = false;
         while (!exitCustomer) {
             System.out.println("\nCustomer Menu:");
@@ -237,6 +250,7 @@ public class StockManagementService implements StockService {
                     System.out.println("Invalid choice! Please enter a number between 1 and 4.");
             }
         }
+    	
     }
 
     @Override
@@ -471,33 +485,6 @@ public class StockManagementService implements StockService {
         }
     }
     
-    
-//    public boolean customerLogin(String id, String passWord) throws SQLException {
-//        Connection connection = null;
-//        PreparedStatement statement = null;
-//        ResultSet resultSet = null;
-//        boolean loggedIn = false;
-//        try {
-//            connection = Connectivity.getConnection();
-//            String loginQuery = "SELECT * FROM Customer WHERE id = ? AND password = ?";
-//            statement = connection.prepareStatement(loginQuery);
-//            statement.setString(1, id);
-//            statement.setString(2, passWord);
-//            resultSet = statement.executeQuery();
-//            loggedIn = resultSet.next();
-//        } finally {
-//            if (resultSet != null) {
-//                resultSet.close();
-//            }
-//            if (statement != null) {
-//                statement.close();
-//            }
-//            if (connection != null) {
-//                connection.close();
-//            }
-//        }
-//        return loggedIn;
-//    }
 
     public boolean customerLogin(String id, String passWord) throws SQLException {
         Connection connection = null;
@@ -513,19 +500,25 @@ public class StockManagementService implements StockService {
             resultSet = statement.executeQuery();
             loggedIn = resultSet.next();
             
-            if (loggedIn) {
-                // Get the lastVisitedDate from the ResultSet
-                Date lastVisitedDate = resultSet.getDate("lastVisitedDate");
-                
-                // Calculate the number of days since the last visit
+            if (loggedIn) {                
+                Date lastVisitedDate = resultSet.getDate("lastVisitedDate");                
                 Date currentDate = new Date();
                 long milliDif = currentDate.getTime() - lastVisitedDate.getTime();
                 long daysSinceLastVisit = TimeUnit.DAYS.convert(milliDif, TimeUnit.MILLISECONDS);
-                
-                // Print the number of days since the last visit
-                System.out.println("Days since last visit: " + daysSinceLastVisit);
-                
-                // Update the lastVisitedDate to current date in the database
+                System.out.println("\t\t ------Welcome Back Customer------");
+                if(daysSinceLastVisit == 0) {
+                	System.out.println("You have visited our store today ");
+                }
+                else if(daysSinceLastVisit == 1) {
+                	System.out.println("You have visited our store yesterday ");
+                }
+                else if(daysSinceLastVisit > 1 && daysSinceLastVisit <= 7){
+                	System.out.println("You have visited our store within this week");
+                }
+                else if(daysSinceLastVisit > 7 && daysSinceLastVisit <= 30) {
+                	System.out.println("You have visited our store within this Month");
+                }
+                System.out.println("You Have visited Our Store before " + daysSinceLastVisit + " days");
                 String updateQuery = "UPDATE Customer SET lastVisitedDate = ? WHERE id = ?";
                 statement = connection.prepareStatement(updateQuery);
                 statement.setDate(1, new java.sql.Date(currentDate.getTime()));
