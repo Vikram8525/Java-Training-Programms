@@ -42,7 +42,7 @@ public class DemoServlet extends HttpServlet {
         String date = request.getParameter("date");
         String pass = request.getParameter("password");
         String rpass = request.getParameter("repassword");
-        d.add(name, phone, date, pass, rpass);
+//        d.add(name, phone, date, pass, rpass);
         demo.setName(name);
         demo.setPhone(phone);
         demo.setDate(date);
@@ -56,17 +56,47 @@ public class DemoServlet extends HttpServlet {
 			e.printStackTrace();
 		}
         
-        request.setAttribute("viewing",d.Display());
+        try {
+			request.setAttribute("viewing",d.listOfUsers());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         request.getRequestDispatcher("displayData.jsp").forward(request, response);
+        
 
     }
     
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+//		doGet(request, response);
+		String action = request.getParameter("action");
+		if(action != null) {
+			switch (action) {
+            case "delete":
+                try {
+                    int idToDelete = Integer.parseInt(request.getParameter("deleteid"));
+                    Demo d = new Demo();
+                    d.deleteUser(idToDelete);
+                } catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+                    e.printStackTrace();
+                    
+                }
+                try {
+					request.setAttribute("viewing",d.listOfUsers());
+				} catch (ClassNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                request.getRequestDispatcher("displayData.jsp").forward(request, response);
+                break;
+			}
+		}
 	}
 
 }
