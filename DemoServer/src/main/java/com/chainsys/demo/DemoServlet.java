@@ -76,6 +76,12 @@ public class DemoServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 //		doGet(request, response);
 		String action = request.getParameter("action");
+		 String name = request.getParameter("name");
+	        String phone = request.getParameter("phone");
+	        String date = request.getParameter("date");
+	        String pass = request.getParameter("password");
+	        String rpass = request.getParameter("repassword");
+		
 		if(action != null) {
 			switch (action) {
             case "delete":
@@ -95,7 +101,33 @@ public class DemoServlet extends HttpServlet {
 				}
                 request.getRequestDispatcher("displayData.jsp").forward(request, response);
                 break;
+                
+            case "update":
+            	try {
+                    Demo d = new Demo();
+                    demo.setName(name);
+                    demo.setPhone(phone);
+                    demo.setDate(date);
+                    demo.setPass(pass);
+                    demo.setRpass(rpass);
+                    
+                    int idToUpdate = Integer.parseInt(request.getParameter("updateid"));
+                    demo.setId(idToUpdate);
+                    d.updateUser(demo);
+                } catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+                    e.printStackTrace();
+                    
+                }
+            try {
+                request.setAttribute("viewing", d.listOfUsers());
+            } catch (ClassNotFoundException | SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+                request.getRequestDispatcher("displayData.jsp").forward(request, response);
+                break;
 			}
+			
 		}
 	}
 

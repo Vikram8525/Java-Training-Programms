@@ -74,22 +74,25 @@
 <div class="container">
     <h2>User Registration</h2>
     <form action="DemoServlet" method="post">
+    	<input type="hidden" name="id" value="<%= request.getParameter("id") %>">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
+        <input type="text" id="name" name="name" >
         
         <label for="phone">Phone:</label>
-        <input type="text" id="phone" name="phone" pattern="[0-9]{10}" required>
+        <input type="text" id="phone" name="phone" pattern="[0-9]{10}" >
         
         <label for="date">Date:</label>
-        <input type="text" id="date" name="date" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" required>
-        
+        <input type="date" id="date" name="date" required>
+        <br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" minlength="6" required>
-        
+        </br>
         <label for="repassword">Re-enter Password:</label>
         <input type="password" id="repassword" name="repassword" minlength="6" required>
 
-        <input type="submit" value="Register">
+        <input type="hidden" name="action" value="update">
+        <input type="hidden" name="updateid" value="<%= request.getParameter("updateid") %>">
+        <button type="submit">Update</button>
     </form>
 </div>
 

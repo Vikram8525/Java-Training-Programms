@@ -101,6 +101,23 @@ public class Demo {
            
        
    }
+	
+	public void updateUser(DemoServerPojo dpojo) throws ClassNotFoundException, SQLException {
+        
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection connection = Connectivity.getConnection();
+        String update = "update UserData set name=?,phone =?,date=?,pass=?,rpass =? where id=?" ;
+        PreparedStatement prepareStatement = connection.prepareStatement(update);
+        prepareStatement.setString(1, dpojo.getName());
+        prepareStatement.setString(2, dpojo.getPhone());
+        prepareStatement.setString(3, dpojo.getDate());
+        prepareStatement.setString(4, dpojo.getPass());
+        prepareStatement.setString(5, dpojo.getRpass());
+        prepareStatement.setInt(6, dpojo.getId());
+        int row = prepareStatement.executeUpdate();
+        System.out.println("updated :"+row);
+   
+}
     
 
 	

@@ -113,11 +113,11 @@ input[type=text]:focus, input[type=password]:focus {
 			<td><%=demo.getRpass()%></td>
 			<td>
 				<!-- Update form -->
-				<form action="DemoServlet" method="post">
+				<form action="Update_User.jsp" method="post">
 					<input type="hidden" name="action" value="update"> <input
-						type="hidden" name="index" value="<%=demo.getId()%>">
+						type="hidden" name="updateid" value="<%=demo.getId()%>">
 
-					<button type="submit">Update</button>
+					<button type="submit" >Update</button>
 				</form> <!-- Delete form -->
 				<form action="DemoServlet" method="post">
 					<input type="hidden" name="action" value="delete"> 
@@ -131,6 +131,10 @@ input[type=text]:focus, input[type=password]:focus {
 		<%
 		}
 		%>
+		<form action = "serchServlet" method="post">
+		<input type = "text" name ="username" placeholder="search by user name">
+		<input type="submit" value="search">
+		</form>
 	</table>
 </body>
 </html>
