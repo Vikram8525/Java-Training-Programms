@@ -129,6 +129,25 @@ public class DemoServlet extends HttpServlet {
 			}
 			
 		}
+		
+		 // Check if the action is to sort
+        if ("sort".equals(request.getParameter("action"))) {
+            // Sort the list of users by name
+            Demo d = new Demo();
+            try {
+                request.setAttribute("viewing", d.listOfUsersSortedByName());
+            } catch (SQLException | ClassNotFoundException e) {
+                // Handle exceptions
+                e.printStackTrace();
+            }
+            // Forward to displaydata.jsp
+            request.getRequestDispatcher("displayData.jsp").forward(request, response);
+        } else {
+            // If not sorting, continue with search
+            // Existing search functionality...
+        }
 	}
+	
+	
 
 }

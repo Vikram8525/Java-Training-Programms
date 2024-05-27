@@ -118,7 +118,73 @@ public class Demo {
         System.out.println("updated :"+row);
    
 }
-    
+	
+	public ArrayList<DemoServerPojo> searchByName(String name) throws ClassNotFoundException, SQLException {
+        ArrayList<DemoServerPojo> userRegister = new ArrayList<>();
+        System.out.println(name);
+       Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection connection = Connectivity.getConnection();
+        String update = "select id,name,phone,date,pass,rpass from UserData where name like ?";
+        PreparedStatement prepareStatement = connection.prepareStatement(update);
+        prepareStatement.setString(1, "%" + name + "%");
+       ResultSet resultSet= prepareStatement.executeQuery();
+        while (resultSet.next()) {
+            
+               DemoServerPojo dPojo = new DemoServerPojo(); 
+               dPojo.setId(resultSet.getInt("id"));
+               dPojo.setName(resultSet.getString("name"));
+               dPojo.setPhone(resultSet.getString("phone"));
+               dPojo.setDate(resultSet.getString("date"));
+               dPojo.setPass(resultSet.getString("pass"));
+               dPojo.setRpass(resultSet.getString("rpass"));
+             
+               
+               userRegister.add(dPojo);
+               System.out.println(userRegister);
+           }
+        return userRegister;
+   }
+    	
+	public ArrayList<DemoServerPojo> listOfUsersSortedByName() throws SQLException, ClassNotFoundException {
+        ArrayList<DemoServerPojo> demoServerPojo = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement prepareStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = Connectivity.getConnection();
+
+            String userList = "SELECT id, name, phone, date, pass, rpass FROM UserData ORDER BY name ASC";
+            prepareStatement = connection.prepareStatement(userList);
+            resultSet = prepareStatement.executeQuery();
+
+            while (resultSet.next()) {
+                DemoServerPojo dpojo = new DemoServerPojo();
+                dpojo.setId(resultSet.getInt("id"));
+                dpojo.setName(resultSet.getString("name"));
+                dpojo.setPhone(resultSet.getString("phone"));
+                dpojo.setDate(resultSet.getString("date"));
+                dpojo.setPass(resultSet.getString("pass"));
+                dpojo.setRpass(resultSet.getString("rpass"));
+
+                demoServerPojo.add(dpojo);
+            }
+        } finally {
+            // Close resources
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (prepareStatement != null) {
+                prepareStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return demoServerPojo;
+    }
+
 
 	
 }

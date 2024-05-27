@@ -1,6 +1,8 @@
 package com.chainsys.demo;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +38,24 @@ public class searchServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+		String name= request.getParameter("name");
+        Demo d=  new Demo();
+        
+        try {
+            request.setAttribute("viewing", d.searchByName(name));
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+         request.getRequestDispatcher("displayData.jsp").forward(request, response);
+
+         
+
+}
 		
-	}
+	
 
 }

@@ -91,18 +91,22 @@ input[type=text]:focus, input[type=password]:focus {
 	<table>
 		<tr>
 			<th>Id</th>
-			<th>Name</th>
+			<th>
+				<form action="DemoServlet" method="post" style="display:inline;">
+					<input type="hidden" name="action" value="sort">
+					Name
+					<button type="submit" style="display:inline;">Sort</button>
+				</form>
+			</th>
 			<th>Phone</th>
 			<th>Date</th>
 			<th>Password</th>
 			<th>Reentered Password</th>
 			<th>Action</th>
-			<!-- New table header for actions -->
 		</tr>
 		<%
 		ArrayList<DemoServerPojo> dataList = (ArrayList<DemoServerPojo>) request.getAttribute("viewing");
 		for(DemoServerPojo demo : dataList){
-			
 		%>
 		<tr>
 			<td><%=demo.getId()%></td>
@@ -114,26 +118,24 @@ input[type=text]:focus, input[type=password]:focus {
 			<td>
 				<!-- Update form -->
 				<form action="Update_User.jsp" method="post">
-					<input type="hidden" name="action" value="update"> <input
-						type="hidden" name="updateid" value="<%=demo.getId()%>">
-
-					<button type="submit" >Update</button>
-				</form> <!-- Delete form -->
+					<input type="hidden" name="action" value="update"> 
+					<input type="hidden" name="updateid" value="<%=demo.getId()%>">
+					<button type="submit" class="update-btn">Update</button>
+				</form>
+				<!-- Delete form -->
 				<form action="DemoServlet" method="post">
 					<input type="hidden" name="action" value="delete"> 
-						<input type="hidden" name="deleteid" value="<%= demo.getId() %>">
-					<!-- Pass user ID -->
+					<input type="hidden" name="deleteid" value="<%= demo.getId() %>">
 					<button type="submit" class="delete-btn">Delete</button>
 				</form>
-
 			</td>
 		</tr>
 		<%
 		}
 		%>
-		<form action = "serchServlet" method="post">
-		<input type = "text" name ="username" placeholder="search by user name">
-		<input type="submit" value="search">
+		<form action="searchServlet" method="post">
+			<input type="text" name="name" placeholder="Search by user name">
+			<input type="submit" value="Search">
 		</form>
 	</table>
 </body>
