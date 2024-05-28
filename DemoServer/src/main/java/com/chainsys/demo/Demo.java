@@ -59,7 +59,7 @@ public class Demo {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = Connectivity.getConnection();
             
-            String userList = "select id, name, phone, date, pass, rpass from UserData";
+            String userList = "select id, name, phone, date, pass, rpass from UserData where isActive = 1";
             prepareStatement = connection.prepareStatement(userList);
             resultSet = prepareStatement.executeQuery();
             
@@ -94,7 +94,7 @@ public class Demo {
         
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection connection = Connectivity.getConnection();
-        String delete = "delete from UserData where id= "+id;
+        String delete = "update userdata set isActive = 0 where id= "+id;
         PreparedStatement prepareStatement = connection.prepareStatement(delete);
         int row = prepareStatement.executeUpdate();
         System.out.println("Affected row :"+row);
@@ -185,6 +185,33 @@ public class Demo {
         return demoServerPojo;
     }
 
-
+	public boolean adminLogin(String name, String passWord) throws SQLException, ClassNotFoundException {
+        // Implementation
+		 Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean loggedIn = false;
+        try {
+            connection = Connectivity.getConnection();
+            String loginQuery = "SELECT * FROM employees WHERE username = ? AND password = ?";
+            statement = connection.prepareStatement(loginQuery);
+            statement.setString(1, name);
+            statement.setString(2, passWord);
+            resultSet = statement.executeQuery();
+            loggedIn = resultSet.next();
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+        return loggedIn;
+    }
 	
 }

@@ -2,26 +2,26 @@ package com.chainsys.demo;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class searchServlet
+ * Servlet implementation class LoginServlet
  */
-@WebServlet("/searchServlet")
-public class searchServlet extends HttpServlet {
+@WebServlet("/LoginServlet")
+public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public searchServlet() {
+    public LoginServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,29 +39,29 @@ public class searchServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		
-		
-		
 		doGet(request, response);
-		String name= request.getParameter("name");
-        Demo d=  new Demo();
-        
-        try {
-            request.setAttribute("viewing", d.searchByName(name));
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-         request.getRequestDispatcher("displayData.jsp").forward(request, response);
-
-         
-
-}
 		
-	
+		 String userName = request.getParameter("username");
+	        String passWord = request.getParameter("password");
+	        Demo d = new Demo();
+	        
+	        try {
+	            if (d.adminLogin(userName, passWord)) {
+	                 HttpSession session = request.getSession();
+	                 Cookie cokie = new Cookie("name",userName);
+	                response.addCookie(cokie);
+	                response.sendRedirect("home.jsp");
+	            } else {
+	                
+	                response.sendRedirect("login.jsp");
+	            }
+	        } catch (SQLException e) {
+	            
+	            e.printStackTrace();
+	        } catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}   
+	}
 
 }

@@ -1,6 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
+<%
+if (session == null) {
+    response.sendRedirect("login.jsp");
+    return;
+}
+String name = null;
+Cookie[] cookies = request.getCookies();
+if (cookies != null) {
+    for (Cookie cookie : cookies) {
+        if ("name".equals(cookie.getName())) {
+            name = cookie.getValue();
+            break;
+        }
+    }
+}
+%>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -158,6 +174,7 @@ video {
 	</header>
 	<main>
 		<div class="form-container">
+		<h2><%= name %></h2>
 			<article>
 				<h1>Registration Form</h1>
 				<form action="DemoServlet">
@@ -200,6 +217,9 @@ video {
 
 					</table>
 					<input type="submit" value="Submit">
+				</form>
+				<form action="LogoutServlet" method="post">
+					<input type="submit" value="Logout">
 				</form>
 			</article>
 		</div>
