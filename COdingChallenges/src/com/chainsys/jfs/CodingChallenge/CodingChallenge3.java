@@ -1,7 +1,7 @@
 package com.chainsys.jfs.CodingChallenge;
 import java.util.Scanner;
 public class CodingChallenge3 {
-
+//regax pattern problem
 	    public static void main(String[] args){
 	        Scanner ip = new Scanner(System.in);
 	        while(ip.hasNext()){
