@@ -2,7 +2,7 @@ package com.chainsys.jfs.CodingChallenge;
 import java.util.*;
 import java.util.Scanner;
 public class CodingChallenge1 {
-
+//Prime number
 	public static void main(String[] args) {
 		System.out.println("to cheeck the given number is prime or not");
 		System.out.println("enter a number :");

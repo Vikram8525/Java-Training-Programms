@@ -1,228 +1,166 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
-<%
-if (session == null) {
-    response.sendRedirect("login.jsp");
-    return;
-}
-String name = null;
-Cookie[] cookies = request.getCookies();
-if (cookies != null) {
-    for (Cookie cookie : cookies) {
-        if ("name".equals(cookie.getName())) {
-            name = cookie.getValue();
-            break;
-        }
-    }
-}
-%>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registration Form</title>
-<style>
-@font-face {
-	font-family: 'One Piece';
-	src: url('path/to/one-piece-font.woff2') format('woff2'),
-		url('path/to/one-piece-font.woff') format('woff');
-	font-weight: normal;
-	font-style: normal;
-}
-
-body {
-	font-family: 'One Piece', Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-	position: relative;
-}
-
-.navbar {
-	display: flex;
-	background-color: rgba(248, 249, 250, 0.8);
-	padding: 10px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-	position: relative;
-	z-index: 2;
-}
-
-.nav-item {
-	margin-right: 10px;
-}
-
-.nav-link {
-	padding: 15px 20px;
-	border-radius: 5px;
-	transition: all 0.3s ease;
-}
-
-.nav-link:hover {
-	background-color: #dee2e6;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-main {
-	margin: 0;
-	padding: 0;
-	display: flex;
-	align-items: flex-start;
-	justify-content: center;
-	position: relative;
-	z-index: 1;
-}
-
-.form-container {
-	background-color: rgba(0, 0, 0, 0.8);
-	padding: 20px;
-	border-radius: 10px;
-	box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-	transition: all 0.3s ease;
-	margin-top: 20px;
-	color: #ffffff;
-}
-
-form {
-	margin-top: 20px;
-}
-
-input[type="text"], input[type="email"], input[type="tel"], input[type="password"],
-	textarea, select {
-	width: calc(100% - 20px);
-	padding: 10px;
-	margin-bottom: 10px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	transition: border-color 0.3s ease;
-}
-
-input[type="submit"], button {
-	width: 100%;
-	padding: 10px;
-	background-color: #4CAF50;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-}
-
-input[type="submit"]:hover, button:hover {
-	background-color: #45a049;
-}
-
-article {
-	background-size: cover;
-	background-position: center;
-	padding: 20px;
-	border-radius: 10px;
-	transition: all 0.3s ease;
-}
-
-article h1 {
-	text-align: center;
-	color: #ffffff;
-}
-
-article table {
-	width: 100%;
-}
-
-article label {
-	font-weight: bold;
-}
-
-article center button {
-	margin-top: 20px;
-}
-
-video {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	z-index: 0;
-	opacity: 0.5;
-}
-
-.form-container:hover {
-	box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Showcase</title>
+    <style>
+        
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding-top: 300px;
+           
+        }
+        .container {
+            width: 250px;
+            height: 300px;
+            position: relative;
+            perspective: 1100px;
+        }
+        #carousel {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+        figure {
+            width: 200px;
+            height: 240px;
+            margin: 0;
+            padding: 5px 20px 0;
+            box-sizing: border-box;
+            position: absolute;
+            cursor: pointer;
+            filter: drop-shadow(0 0 20px rgb(0 0 0 / 50%));
+            background-color: #333;
+            border: 2px solid #fff;
+            transition: transform 0.5s, filter 0.5s;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: contrast(1) brightness(1);
+            transition: transform 0.5s, filter 0.5s;
+        }
+        .blurred img {
+            filter: blur(10px);
+        }
+        figure.active img {
+            transform: scale(2.2) translate(-10%, -10%);
+            filter: contrast(1.5);
+        }
+        @keyframes rotating {
+            from {
+                transform: rotateY(0deg);
+            }
+            to {
+                transform: rotateY(-360deg);
+            }
+        }
+        #carousel div {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+        }
+        #carousel div:nth-child(1) { transform: rotateY(0deg) translateZ(400px); }
+        #carousel div:nth-child(2) { transform: rotateY(45deg) translateZ(400px); }
+        #carousel div:nth-child(3) { transform: rotateY(90deg) translateZ(400px); }
+        #carousel div:nth-child(4) { transform: rotateY(135deg) translateZ(400px); }
+        #carousel div:nth-child(5) { transform: rotateY(180deg) translateZ(400px); }
+        #carousel div:nth-child(6) { transform: rotateY(225deg) translateZ(400px); }
+        #carousel div:nth-child(7) { transform: rotateY(270deg) translateZ(400px); }
+        #carousel div:nth-child(8) { transform: rotateY(315deg) translateZ(400px); }
+    </style>
 </head>
 <body>
-	<video autoplay muted loop>
-		<source src="Media/sample start.mp4" type="video/mp4">
-	</video>
-	<header>
-		<nav class="navbar">
-			<div class="nav-item">
-				<a class="nav-link" href="index.html">One Piece</a>
-			</div>
-			<div class="nav-item">
-				<a class="nav-link" href="index.html">Home</a>
-			</div>
-			<div class="nav-item">
-				<a class="nav-link" href="index.html#about">About</a>
-			</div>
-			<div class="nav-item">
-				<a class="nav-link" href="index.html#contact">Contact</a>
-			</div>
-		</nav>
-	</header>
-	<main>
-		<div class="form-container">
-		<h2><%= name %></h2>
-			<article>
-				<h1>Registration Form</h1>
-				<form action="DemoServlet">
-					<table>
-						<tr>
-							<td><label for="fname"><h2>
-										Name:<span style="color: crimson;">*</span>
-									</h2></label></td>
-							<td><input type="text" id="fname" name="fname" required
-								minlength="2" maxlength="30" placeholder="Enter your first name"></td>
-						</tr>
-						<tr>
-							<td><label for="phone"><h2>
-										Phone Number:<span style="color: crimson;">*</span>
-									</h2></label></td>
-							<td><input type="tel" id="phone" name="phone" required
-								pattern="[0-9]{10}" placeholder="Enter your mobile number"></td>
-						</tr>
-						<tr>
-							<td><label for="date"><h2>Date of Birth:</h2></label></td>
-							<td><input type="date" id="date" name="date" required
-								min="1923-01-01" max="2023-01-01"></td>
-						</tr>
-						<tr>
-							<td><label for="password"><h2>
-										Password:<span style="color: crimson;">*</span>
-									</h2></label></td>
-							<td><input type="password" id="password" name="password"
-								required minlength="8" maxlength="16"
-								placeholder="Enter your password"></td>
-						</tr>
-						<tr>
-							<td><label for="repassword"><h2>
-										Retype Password: <span style="color: crimson;">*</span>
-									</h2></label></td>
-							<td><input type="password" id="repassword" name="repassword"
-								required minlength="8" maxlength="16"
-								placeholder="Enter your password again"></td>
-						</tr>
+    <div class="container">
+        <div id="carousel">
+            <div>
+                <figure>
+                    <img src="https://png.pngtree.com/png-clipart/20240218/original/pngtree-dropshipping-men-hole-sole-jogging-shoes-png-image_14339669.png" alt="Necromancer">
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="https://png.pngtree.com/png-clipart/20240603/original/pngtree-branded-blue-wrist-watch-png-image_15240339.png" alt="Druid">
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="https://png.pngtree.com/png-clipart/20240218/original/pngtree-dropshipping-men-hole-sole-jogging-shoes-png-image_14339669.png" alt="Necromancer">
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="https://png.pngtree.com/png-clipart/20240603/original/pngtree-branded-blue-wrist-watch-png-image_15240339.png" alt="Druid">
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="https://png.pngtree.com/png-clipart/20240218/original/pngtree-dropshipping-men-hole-sole-jogging-shoes-png-image_14339669.png" alt="Necromancer">
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="https://png.pngtree.com/png-clipart/20240603/original/pngtree-branded-blue-wrist-watch-png-image_15240339.png" alt="Druid">
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="https://png.pngtree.com/png-clipart/20240218/original/pngtree-dropshipping-men-hole-sole-jogging-shoes-png-image_14339669.png" alt="Necromancer">
+                </figure>
+            </div>
+            <div>
+                <figure>
+                    <img src="https://png.pngtree.com/png-clipart/20240603/original/pngtree-branded-blue-wrist-watch-png-image_15240339.png" alt="Druid">
+                </figure>
+            </div>
+            
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const carousel = document.getElementById('carousel');
+            const figures = carousel.querySelectorAll('figure');
+            let currentIndex = 0;
+            let rotating = true;
+            let rotationInterval;
 
-					</table>
-					<input type="submit" value="Submit">
-				</form>
-				<form action="LogoutServlet" method="post">
-					<input type="submit" value="Logout">
-				</form>
-			</article>
-		</div>
-	</main>
+            function updateCarousel() {
+                if (rotating) {
+                    figures.forEach((figure, index) => {
+                        figure.classList.remove('active', 'blurred');
+                        if (index === currentIndex) {
+                            figure.classList.add('active');
+                        } else {
+                            figure.classList.add('blurred');
+                        }
+                    });
+
+                    const degree = -currentIndex * 45;
+                    carousel.style.transform = `rotateY(${degree}deg)`;
+
+                    currentIndex = (currentIndex + 1) % figures.length;
+
+                    rotating = false;
+                    setTimeout(() => {
+                        rotating = true;
+                    }, 3000);
+                }
+            }
+
+            rotationInterval = setInterval(updateCarousel, 3000);
+
+            updateCarousel();
+        });
+    </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CodingChallenge2 {
+	//calculate XOR Sum 
 	    public static int calculateSubsetXORSum(int[] nums) {
 	        List<List<Integer>> result = new ArrayList<>();
 	        int totalXORSum = 0;
