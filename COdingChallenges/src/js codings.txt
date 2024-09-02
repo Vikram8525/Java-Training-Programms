@@ -1,0 +1,78 @@
+1. Implement a Simple Event Emitter
+	javascript
+	Copy code
+	class EventEmitter {
+	    constructor() {
+	        this.events = {};
+	    }
+
+	    on(event, listener) {
+	        if (!this.events[event]) {
+	            this.events[event] = [];
+	        }
+	        this.events[event].push(listener);
+	    }
+
+	    emit(event, ...args) {
+	        if (this.events[event]) {
+	            this.events[event].forEach(listener => listener(...args));
+	        }
+	    }
+
+	    off(event, listener) {
+	        if (!this.events[event]) return;
+	        this.events[event] = this.events[event].filter(l => l !== listener);
+	    }
+	}
+	
+	2. Find All Pairs with a Given Sum
+	javascript
+	Copy code
+	function findPairsWithSum(arr, target) {
+	    const pairs = [];
+	    const seen = new Set();
+
+	    for (const num of arr) {
+	        const complement = target - num;
+	        if (seen.has(complement)) {
+	            pairs.push([complement, num]);
+	        }
+	        seen.add(num);
+	    }
+
+	    return pairs;
+	}
+	
+	3. Group Anagrams
+	javascript
+	Copy code
+	function groupAnagrams(strs) {
+	    const map = new Map();
+	    for (const str of strs) {
+	        const sorted = str.split('').sort().join('');
+	        if (!map.has(sorted)) {
+	            map.set(sorted, []);
+	        }
+	        map.get(sorted).push(str);
+	    }
+	    return [...map.values()];
+	}
+	
+	4. Longest Substring Without Repeating Characters
+	javascript
+	Copy code
+	function longestSubstringWithoutRepeating(str) {
+	    let map = new Map();
+	    let start = 0, maxLength = 0;
+
+	    for (let end = 0; end < str.length; end++) {
+	        if (map.has(str[end])) {
+	            start = Math.max(map.get(str[end]) + 1, start);
+	        }
+	        map.set(str[end], end);
+	        maxLength = Math.max(maxLength, end - start + 1);
+	    }
+
+	    return maxLength;
+	}
+	
