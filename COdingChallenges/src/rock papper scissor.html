@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .choices img {
+            width: 100px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Rock Paper Scissors Game</h1>
+
+    <div class="choices">
+        <img src="https://i.imgur.com/3j1kdo5.png" alt="Rock" id="rock">
+        <img src="https://i.imgur.com/R7m9YV9.png" alt="Paper" id="paper">
+        <img src="https://i.imgur.com/KCwGZCY.png" alt="Scissors" id="scissors">
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        const choices = ['rock', 'paper', 'scissors'];
+        const resultDiv = document.getElementById('result');
+        const rockImg = document.getElementById('rock');
+        const paperImg = document.getElementById('paper');
+        const scissorsImg = document.getElementById('scissors');
+        rockImg.addEventListener('click', () => playGame('rock'));
+        paperImg.addEventListener('click', () => playGame('paper'));
+        scissorsImg.addEventListener('click', () => playGame('scissors'));
+        function playGame(userChoice) {
+            const computerChoice = choices[Math.floor(Math.random() * 3)];
+            const winner = determineWinner(userChoice, computerChoice);
+
+            resultDiv.innerHTML = `
+                You chose: <strong>${capitalize(userChoice)}</strong><br>
+                Computer chose: <strong>${capitalize(computerChoice)}</strong><br>
+                ${winner}
+            `;
+        }
+        function determineWinner(user, computer) {
+            if (user === computer) {
+                return "It's a draw!";
+            }
+
+            if (
+                (user === 'rock' && computer === 'scissors') ||
+                (user === 'paper' && computer === 'rock') ||
+                (user === 'scissors' && computer === 'paper')
+            ) {
+                return "You win!";
+            } else {
+                return "Computer wins!";
+            }
+        }
+        function capitalize(word) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fibonacci Series Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        #popupForm {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .closeBtn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .submitBtn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .inputField {
+            padding: 8px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="openPopupBtn">Open Fibonacci Calculator</button>
+
+    <div id="overlay"></div>
+
+    <div id="popupForm">
+        <h2>Enter a Number</h2>
+        <input type="number" id="inputNumber" class="inputField" placeholder="Enter a positive number">
+        <button id="calculateBtn" class="submitBtn">Calculate Fibonacci Series</button>
+        <button id="closePopupBtn" class="closeBtn">Close</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const openPopupBtn = document.getElementById('openPopupBtn');
+        const popupForm = document.getElementById('popupForm');
+        const overlay = document.getElementById('overlay');
+        const closePopupBtn = document.getElementById('closePopupBtn');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const inputNumber = document.getElementById('inputNumber');
+        const result = document.getElementById('result');
+
+        openPopupBtn.addEventListener('click', () => {
+            popupForm.style.display = 'block';
+            overlay.style.display = 'block';
+        });
+
+        closePopupBtn.addEventListener('click', () => {
+            popupForm.style.display = 'none';
+            overlay.style.display = 'none';
+            result.textContent = ''; 
+        });
+
+        calculateBtn.addEventListener('click', () => {
+            const number = parseInt(inputNumber.value);
+            if (isNaN(number) || number < 0) {
+                result.textContent = "Please enter a valid positive number!";
+                result.style.color = "red";
+            } else {
+                result.textContent = `Fibonacci series up to ${number}: ${fibonacciSeries(number).join(', ')}`;
+                result.style.color = "green";
+            }
+        });
+
+        // Fibonacci series function
+        function fibonacciSeries(n) {
+            let series = [];
+            if (n >= 0) series.push(0); 
+            if (n >= 1) series.push(1); 
+
+            let a = 0, b = 1, temp;
+            for (let i = 2; i <= n; i++) {
+                temp = a + b;
+                series.push(temp);
+                a = b;
+                b = temp;
+            }
+            return series;
+        }
+    </script>
+
+</body>
+</html>
